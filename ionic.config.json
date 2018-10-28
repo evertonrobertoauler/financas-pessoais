@@ -1,0 +1,7 @@
+{
+  "name": "financas-pessoais",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}
