@@ -2,6 +2,7 @@
 
 # compiled output
 /cordova
+/config
 /tmp
 /out-tsc
 

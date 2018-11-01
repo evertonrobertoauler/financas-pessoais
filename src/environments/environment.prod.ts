@@ -1,3 +1,7 @@
+import { firebase, webClientId } from '../../config/public';
+
 export const environment = {
-  production: true
+  production: true,
+  firebase,
+  webClientId
 };
