@@ -11,7 +11,7 @@ export interface Model {
 }
 
 @State<Model>({
-  name: 'login',
+  name: 'LoginState',
   defaults: { carregando: true }
 })
 export class LoginState implements NgxsOnInit {

@@ -1,0 +1,18 @@
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /usuarios/{id} {
+      allow read: if id == request.auth.uid;
+      allow write: if id == request.auth.uid;
+
+      match /caixasFinanceiros/{caixaId} {
+        allow read: if id == request.auth.uid;
+        allow write: if id == request.auth.uid;
+      }
+
+      match /transacoes/{transacaoId} {
+        allow read: if id == request.auth.uid;
+        allow write: if id == request.auth.uid;
+      }
+    }
+  }
+}
