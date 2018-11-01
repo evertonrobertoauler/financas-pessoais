@@ -1,27 +1,53 @@
-# FinancasPessoais
+# Finanças Pessoais
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.0.3.
+## Depêndencias principais
 
-## Development server
+- Node.js >= v10.10.0
+- Cordova >= 8.0.0
+- angular/cli >= 7.0.3
+- gulp-cli >= 2.0.1
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Instalando dependências
 
-## Code scaffolding
+      // Instalar dependências globais
+      npm install -g cordova @angular/cli gulp-cli
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+      // Instalar depedências locais
+      cd financas-pessoais; npm install
 
-## Build
+## Configurando projeto Firebase
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+Na raíz do projeto crie uma pasta 'config' contendo 2 arquivos:
 
-## Running unit tests
+- config/public.ts
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-## Running end-to-end tests
+      // Configuração Web do Firebase (Painel Firebase)
+      export const firebase = {
+        apiKey: '',
+        authDomain: '',
+        databaseURL: '',
+        projectId: '',
+        storageBucket: '',
+        messagingSenderId: ''
+      };
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+      // Endereço disponíbilizado na configuração do login com Google (Painel Firebase)
+      export const webClientId = '';
 
-## Further help
+- config/google-services.json
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+      // Faça o download deste arquivo no Painel do Firebase ao adicionar a plataforma Android
+
+# Desenvolver no Browser
+
+    ng serve
+
+# Desenvolver no Android
+
+    gulp runAndroidRemote
+
+# Instalar o Aplicativo no Android
+
+    gulp runAndroidProd
