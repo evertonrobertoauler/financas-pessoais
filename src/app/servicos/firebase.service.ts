@@ -9,6 +9,10 @@ import { first } from 'rxjs/operators';
 export class FirebaseService {
   constructor(private platform: Platform, private auth: AngularFireAuth) {}
 
+  async obterUsuarioLogin() {
+    return await this.auth.user.pipe(first()).toPromise();
+  }
+
   async loginComGoogle() {
     if (this.platform.is('cordova')) {
       const credencial = await this.obterCredencialGoogle();
@@ -17,7 +21,7 @@ export class FirebaseService {
       await this.auth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
     }
 
-    return await this.auth.user.pipe(first()).toPromise();
+    return await this.obterUsuarioLogin();
   }
 
   async deslogar() {

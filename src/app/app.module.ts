@@ -10,39 +10,27 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
-import { FirebaseService } from './servicos/firebase.service';
+import { STATES } from './ngxs';
+import { SERVICOS } from './servicos';
+import { PAGINAS, COMPONENTES, MODAIS } from './paginas';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { LoginComponent } from './paginas/login/login.component';
-import { InicioComponent } from './paginas/inicio/inicio.component';
-import { SaldoComponent } from './paginas/inicio/saldo/saldo.component';
-import { ExtratoComponent } from './paginas/inicio/extrato/extrato.component';
-import { AdicionarComponent } from './paginas/inicio/adicionar/adicionar.component';
-import { MenuComponent } from './paginas/inicio/adicionar/menu/menu.component';
-import { SairComponent } from './paginas/inicio/sair/sair.component';
 
 import { environment } from '../environments/environment';
+import { NgxsModule } from '@ngxs/store';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    LoginComponent,
-    InicioComponent,
-    SaldoComponent,
-    ExtratoComponent,
-    AdicionarComponent,
-    MenuComponent,
-    SairComponent
-  ],
-  entryComponents: [MenuComponent],
+  declarations: [AppComponent, ...PAGINAS, ...COMPONENTES, ...MODAIS],
+  entryComponents: [...MODAIS],
   imports: [
     BrowserModule,
     AppRoutingModule,
     IonicModule.forRoot(),
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule.enablePersistence(),
-    AngularFireAuthModule
+    AngularFireAuthModule,
+    NgxsModule.forRoot(STATES)
   ],
   providers: [
     StatusBar,
@@ -52,7 +40,7 @@ import { environment } from '../environments/environment';
       provide: FirestoreSettingsToken,
       useValue: { timestampsInSnapshots: true } as Settings
     },
-    FirebaseService
+    ...SERVICOS
   ],
   bootstrap: [AppComponent]
 })

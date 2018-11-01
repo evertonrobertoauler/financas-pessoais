@@ -1,18 +1,15 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { InicioComponent } from './paginas/inicio/inicio.component';
-import { SaldoComponent } from './paginas/inicio/saldo/saldo.component';
-import { ExtratoComponent } from './paginas/inicio/extrato/extrato.component';
-import { LoginComponent } from './paginas/login/login.component';
+import { Paginas } from './paginas';
 
 const routes: Routes = [
   {
     path: 'login',
-    component: LoginComponent
+    component: Paginas.LoginComponent
   },
   {
     path: 'inicio',
-    component: InicioComponent,
+    component: Paginas.InicioComponent,
     children: [
       {
         path: '',
@@ -22,12 +19,12 @@ const routes: Routes = [
       {
         path: 'saldo',
         outlet: 'saldo',
-        component: SaldoComponent
+        component: Paginas.InicioSaldoComponent
       },
       {
         path: 'extrato',
         outlet: 'extrato',
-        component: ExtratoComponent
+        component: Paginas.InicioExtratoComponent
       }
     ]
   },

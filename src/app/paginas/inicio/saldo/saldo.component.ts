@@ -1,15 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-saldo',
+  selector: 'app-inicio-saldo',
   templateUrl: './saldo.component.html',
   styleUrls: ['./saldo.component.scss']
 })
-export class SaldoComponent implements OnInit {
+export class InicioSaldoComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

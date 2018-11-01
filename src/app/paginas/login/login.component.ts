@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { FirebaseService } from '../../servicos/firebase.service';
+import { Store } from '@ngxs/store';
+import { login } from '../../ngxs';
 
 @Component({
   selector: 'app-login',
@@ -8,10 +8,9 @@ import { FirebaseService } from '../../servicos/firebase.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-  constructor(private router: Router, private firebase: FirebaseService) {}
+  constructor(private store: Store) {}
 
-  async entrar() {
-    await this.firebase.loginComGoogle();
-    this.router.navigateByUrl('');
+  entrar() {
+    this.store.dispatch(new login.LogarComGoogle());
   }
 }

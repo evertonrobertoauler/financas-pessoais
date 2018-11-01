@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { FirebaseService } from '../../../servicos/firebase.service';
+import { Store } from '@ngxs/store';
+import { login } from '../../../ngxs';
 
 @Component({
   selector: 'app-sair',
@@ -12,10 +12,9 @@ import { FirebaseService } from '../../../servicos/firebase.service';
   styles: []
 })
 export class SairComponent {
-  constructor(private router: Router, private firebase: FirebaseService) {}
+  constructor(private store: Store) {}
 
-  async sair() {
-    await this.firebase.deslogar();
-    this.router.navigateByUrl('login', { skipLocationChange: true });
+  sair() {
+    this.store.dispatch(new login.Deslogar());
   }
 }
