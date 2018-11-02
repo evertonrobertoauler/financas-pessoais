@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { PopoverController } from '@ionic/angular';
 
 @Component({
   selector: 'app-menu',
@@ -6,7 +8,7 @@ import { Component } from '@angular/core';
   <ion-content>
     <ion-list>
       <ion-item (click)="adicionarTransacoes()">
-        <ion-label>Transações</ion-label>
+        <ion-label>Transação</ion-label>
         <ion-icon name="card" slot="end" color="tertiary"></ion-icon>
       </ion-item>
       <ion-item (click)="adicionarCaixaFinanceiro()">
@@ -19,13 +21,15 @@ import { Component } from '@angular/core';
   styles: []
 })
 export class MenuComponent {
-  constructor() {}
+  constructor(private router: Router, private popoverCtrc: PopoverController) {}
 
-  adicionarTransacoes() {
-    console.log('adicionarTransacoes');
+  async adicionarTransacoes() {
+    await this.router.navigateByUrl('transacao');
+    await this.popoverCtrc.dismiss();
   }
 
-  adicionarCaixaFinanceiro() {
-    console.log('adicionarCaixaFinanceiro');
+  async adicionarCaixaFinanceiro() {
+    await this.router.navigateByUrl('caixa-financeiro');
+    await this.popoverCtrc.dismiss();
   }
 }

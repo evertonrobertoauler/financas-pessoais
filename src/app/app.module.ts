@@ -13,15 +13,17 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { STATES } from './ngxs';
 import { SERVICOS } from './servicos';
 import { PAGINAS, COMPONENTES, MODAIS } from './paginas';
+import { DIRETIVAS } from './diretivas';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 import { environment } from '../environments/environment';
 import { NgxsModule } from '@ngxs/store';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [AppComponent, ...PAGINAS, ...COMPONENTES, ...MODAIS],
+  declarations: [AppComponent, ...PAGINAS, ...COMPONENTES, ...MODAIS, ...DIRETIVAS],
   entryComponents: [...MODAIS],
   imports: [
     BrowserModule,
@@ -30,7 +32,8 @@ import { NgxsModule } from '@ngxs/store';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule.enablePersistence(),
     AngularFireAuthModule,
-    NgxsModule.forRoot(STATES)
+    NgxsModule.forRoot(STATES),
+    ReactiveFormsModule
   ],
   providers: [
     StatusBar,

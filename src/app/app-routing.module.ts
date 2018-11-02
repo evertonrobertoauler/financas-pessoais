@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { Paginas } from './paginas';
+import { GUARDAS, FormulariosGuard } from './guardas';
 
 const routes: Routes = [
   {
@@ -29,6 +30,16 @@ const routes: Routes = [
     ]
   },
   {
+    path: 'caixa-financeiro',
+    component: Paginas.CaixaFinanceiroComponent,
+    canDeactivate: [FormulariosGuard]
+  },
+  {
+    path: 'caixa-financeiro/:id',
+    component: Paginas.CaixaFinanceiroComponent,
+    canDeactivate: [FormulariosGuard]
+  },
+  {
     path: '',
     redirectTo: '/inicio/(saldo:saldo)',
     pathMatch: 'full'
@@ -37,6 +48,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
+  providers: [...GUARDAS],
   exports: [RouterModule]
 })
 export class AppRoutingModule {}

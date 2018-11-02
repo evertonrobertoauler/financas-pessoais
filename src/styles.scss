@@ -1,2 +1,18 @@
 @import 'scss/ionic';
 @import 'scss/cores';
+
+[appMostrarErros] {
+  --padding-start: 8px;
+  border: solid thin var(--ion-color-medium-tint);
+  border-radius: 3px;
+  margin: 5px 0;
+}
+
+.mostrar-erro {
+  color: var(--ion-color-danger);
+  text-decoration: underline;
+  width: 100%;
+  text-align: right;
+  font-size: 0.7rem;
+  display: none;
+}

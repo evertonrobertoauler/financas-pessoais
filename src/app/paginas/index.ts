@@ -5,19 +5,22 @@ import { InicioExtratoComponent } from './inicio/extrato/extrato.component';
 import { AdicionarComponent } from './inicio/adicionar/adicionar.component';
 import { MenuComponent } from './inicio/adicionar/menu/menu.component';
 import { SairComponent } from './inicio/sair/sair.component';
+import { CaixaFinanceiroComponent } from './caixa-financeiro/caixa-financeiro.component';
 
 export const PAGINAS = [
   LoginComponent,
   InicioComponent,
   InicioSaldoComponent,
-  InicioExtratoComponent
+  InicioExtratoComponent,
+  CaixaFinanceiroComponent
 ];
 
 export const Paginas = {
   LoginComponent,
   InicioComponent,
   InicioSaldoComponent,
-  InicioExtratoComponent
+  InicioExtratoComponent,
+  CaixaFinanceiroComponent
 };
 
 export const COMPONENTES = [AdicionarComponent, SairComponent];

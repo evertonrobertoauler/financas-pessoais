@@ -8,6 +8,21 @@
 </ion-header>
 
 <ion-content padding>
+  <ion-list>
+    <ion-item>
+      <ion-label>
+        <p><b>Saldo Atual Geral:</b> {{ saldoAtual$ | async | currency:'BRL' }}</p>
+        <p><b>Saldo Futuro Geral:</b> {{ saldoFuturo$ | async | currency:'BRL' }}</p>
+      </ion-label>
+    </ion-item>
+    <ion-item *ngFor="let caixa of caixasFinanceiros$ | async" (click)="editarCaixa(caixa)">
+      <ion-label>
+        <h3>{{ caixa.nome }} ({{ caixa.tipo }})</h3>
+        <p><b>Saldo Atual:</b> {{ (caixa.saldoAtual || 0) | currency:'BRL' }}</p>
+        <p><b>Saldo Futuro:</b> {{ (caixa.saldoFuturo || 0) | currency:'BRL' }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <app-adicionar></app-adicionar>
   </ion-fab>

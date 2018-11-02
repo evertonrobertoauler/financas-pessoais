@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngxs/store';
+import { LoginState } from '../../ngxs';
+import { Observable } from 'rxjs';
+import { Usuario } from '../../interfaces';
 
 @Component({
   selector: 'app-inicio',
@@ -6,7 +10,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./inicio.component.scss']
 })
 export class InicioComponent implements OnInit {
-  constructor() {}
+  public usuario$: Observable<Usuario>;
 
-  ngOnInit() {}
+  constructor(private store: Store) {}
+
+  ngOnInit() {
+    this.usuario$ = this.store.select(LoginState.usuario);
+  }
 }

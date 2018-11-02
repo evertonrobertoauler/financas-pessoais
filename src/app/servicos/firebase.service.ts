@@ -4,7 +4,7 @@ import { environment } from '../../environments/environment';
 import { Platform } from '@ionic/angular';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { first, filter, map } from 'rxjs/operators';
-import { AngularFirestore, QueryFn } from '@angular/fire/firestore';
+import { AngularFirestore, QueryFn, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { Timestamp } from '@firebase/firestore-types';
 import { User } from 'firebase/app';
 
@@ -56,6 +56,35 @@ export class FirebaseService {
     }
   }
 
+  async operacao<T = any>(
+    operacao: 'salvar' | 'excluir',
+    doc: AngularFirestoreDocument<T>,
+    dados?: T
+  ) {
+    dados = this.jsonParse(this.jsonStringify(dados));
+
+    const docFn = () =>
+      doc
+        .get({ source: 'cache' })
+        .pipe(first())
+        .toPromise()
+        .catch(() => ({ exists: false, data: () => dados }));
+
+    switch (operacao) {
+      case 'salvar':
+        if ((await docFn()).exists) {
+          doc.update(dados);
+        } else {
+          doc.set(dados);
+        }
+
+        return (await docFn()).data() as T;
+      case 'excluir':
+        doc.delete();
+        return null;
+    }
+  }
+
   obterColecao<T = any>(fn: (user: User) => { colecao: string; filtros?: QueryFn[] }) {
     return this.obterUsuarioLoginObservable().pipe(
       map(user => {
@@ -66,7 +95,9 @@ export class FirebaseService {
   }
 
   obterDoc<T = any>(caminho: string) {
-    return this.obterUsuarioLoginObservable().pipe(map(() => this.firestore.doc<T>(caminho)));
+    return this.obterUsuarioLoginObservable()
+      .pipe(first())
+      .pipe(map(() => this.firestore.doc<T>(caminho)));
   }
 
   queryFn(...filtros: QueryFn[]): QueryFn {

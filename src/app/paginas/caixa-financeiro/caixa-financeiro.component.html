@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button #backButton defaultHref="/inicio/(saldo:saldo)"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Caixa Financeiro</ion-title>
+    <ion-buttons slot="end" *ngIf="id">
+      <ion-button color="light" (click)="excluir()">
+        <ion-icon slot="icon-only" name="trash"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <form [formGroup]="formulario" appMostrarPrimeiroErro (submit)="salvar()">
+    <ion-list>
+      <ion-item>
+        <ion-label position="stacked">Nome</ion-label>
+        <ion-input type="text" formControlName="nome" appMostrarErros></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Tipo</ion-label>
+        <ion-select placeholder="Selecione um tipo" interface="popover" formControlName="tipo" appMostrarErros>
+          <ion-select-option *ngFor="let tipo of tipos" [value]="tipo">
+            {{ tipo }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item *ngIf="cartao$ | async">
+        <ion-label position="stacked">Dia da Fatura</ion-label>
+        <ion-input type="number" formControlName="diaFatura" appMostrarErros></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          <ion-button expand="full" type="submit">Salvar</ion-button>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </form>
+</ion-content>

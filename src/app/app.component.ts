@@ -84,7 +84,7 @@ export class AppComponent implements OnInit {
 
   private fecharAplicativo(evento: NavigationStart) {
     if (
-      [this.URL_INICIO, this.URL_LOGIN].indexOf(evento.url) !== -1 &&
+      [this.URL_INICIO, this.URL_LOGIN, '/', ''].indexOf(evento.url) !== -1 &&
       this.platform.is('cordova') &&
       this.platform.is('android')
     ) {

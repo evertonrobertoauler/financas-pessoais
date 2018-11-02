@@ -1,51 +1,53 @@
 import { State, NgxsOnInit, StateContext, Action, Selector } from '@ngxs/store';
-import { User } from 'firebase/app';
-import { FirebaseService } from '../servicos';
+import { FirebaseService, UsuarioService } from '../servicos';
 import * as actions from './login.actions';
+import { Usuario } from '../interfaces';
 
 export const login = actions;
 
-export interface Model {
-  usuario?: User;
+export interface LgModel {
+  usuario?: Usuario;
   carregando: boolean;
 }
 
-@State<Model>({
+@State<LgModel>({
   name: 'LoginState',
   defaults: { carregando: true }
 })
 export class LoginState implements NgxsOnInit {
   @Selector()
-  static carregando(state: Model) {
+  static carregando(state: LgModel) {
     return state.carregando;
   }
 
   @Selector()
-  static logado(state: Model) {
+  static logado(state: LgModel) {
     return !!state.usuario;
   }
 
   @Selector()
-  static usuario(state: Model) {
+  static usuario(state: LgModel) {
     return state.usuario;
   }
 
-  constructor(private firebase: FirebaseService) {}
+  constructor(private firebase: FirebaseService, private usuario: UsuarioService) {}
 
-  async ngxsOnInit(ctx: StateContext<Model>) {
-    const usuario = await this.firebase.obterUsuarioLogin();
+  async ngxsOnInit(ctx: StateContext<LgModel>) {
+    const user = await this.firebase.obterUsuarioLogin();
+    const usuario = user && (await this.usuario.salvar(user));
     ctx.patchState({ usuario, carregando: false });
   }
 
   @Action(actions.LogarComGoogle)
-  async logarComGoogle(ctx: StateContext<Model>) {
+  async logarComGoogle(ctx: StateContext<LgModel>) {
     ctx.patchState({ carregando: true });
-    const usuario = await this.firebase.loginComGoogle();
+    const user = await this.firebase.loginComGoogle();
+    const usuario = await this.usuario.salvar(user);
     ctx.patchState({ usuario, carregando: false });
   }
 
   @Action(actions.Deslogar)
-  async deslogar(ctx: StateContext<Model>) {
+  async deslogar(ctx: StateContext<LgModel>) {
     ctx.patchState({ carregando: true });
     await this.firebase.deslogar();
     ctx.patchState({ usuario: null, carregando: false });
