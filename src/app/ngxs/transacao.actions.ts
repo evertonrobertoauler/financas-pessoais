@@ -1,7 +1,7 @@
 import { Transacao } from '../interfaces';
 
-export class InserirTransacao {
-  static readonly type = '[Transação] Inserir Transação]';
+export class SalvarTransacao {
+  static readonly type = '[Transação] Salvar Transação]';
   constructor(public payload: Transacao) {}
 }
 

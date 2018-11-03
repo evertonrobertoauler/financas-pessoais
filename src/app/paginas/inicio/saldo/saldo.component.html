@@ -17,7 +17,7 @@
     </ion-item>
     <ion-item *ngFor="let caixa of caixasFinanceiros$ | async" (click)="editarCaixa(caixa)">
       <ion-label>
-        <h3>{{ caixa.nome }} ({{ caixa.tipo }})</h3>
+        <h2>{{ caixa.nome }} ({{ caixa.tipo }})</h2>
         <p><b>Saldo Atual:</b> {{ (caixa.saldoAtual || 0) | currency:'BRL' }}</p>
         <p><b>Saldo Futuro:</b> {{ (caixa.saldoFuturo || 0) | currency:'BRL' }}</p>
       </ion-label>

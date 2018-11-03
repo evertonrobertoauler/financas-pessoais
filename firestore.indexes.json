@@ -1,3 +1,17 @@
 {
-  "indexes": []
+  "indexes": [
+    {
+      "collectionId": "transacoes",
+      "fields": [
+        {
+          "fieldPath": "dataTransacao",
+          "mode": "DESCENDING"
+        },
+        {
+          "fieldPath": "dataCadastro",
+          "mode": "DESCENDING"
+        }
+      ]
+    }
+  ]
 }

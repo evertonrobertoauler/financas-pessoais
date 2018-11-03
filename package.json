@@ -27,8 +27,10 @@
     "@ionic/angular": "4.0.0-beta.15",
     "@ngxs/store": "^3.2.0",
     "core-js": "^2.5.7",
+    "date-fns": "^1.29.0",
     "firebase": "^5.5.7",
     "rxjs": "~6.3.3",
+    "vanilla-masker": "^1.2.0",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {

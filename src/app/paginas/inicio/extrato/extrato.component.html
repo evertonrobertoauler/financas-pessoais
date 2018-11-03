@@ -8,6 +8,19 @@
 </ion-header>
 
 <ion-content padding>
+  <ion-list>
+    <ion-item *ngFor="let transacao of transacoes$ | async" (click)="editarTransacao(transacao)">
+      <ion-label>
+        <h1>{{ transacao.dataTransacao }}</h1>
+        <h2>{{ transacao.tipo }}</h2>
+        <h3 *ngIf="transacao.caixaFinanceiro$ | async as caixa">
+          {{ caixa.nome }} ({{ caixa.tipo }})
+        </h3>
+        <p><b>Valor:</b> {{ (transacao.valor || 0) | currency:'BRL' }}</p>
+        <p>{{ transacao.descricao }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <app-adicionar></app-adicionar>
   </ion-fab>

@@ -6,13 +6,15 @@ import { AdicionarComponent } from './inicio/adicionar/adicionar.component';
 import { MenuComponent } from './inicio/adicionar/menu/menu.component';
 import { SairComponent } from './inicio/sair/sair.component';
 import { CaixaFinanceiroComponent } from './caixa-financeiro/caixa-financeiro.component';
+import { TransacaoComponent } from './transacao/transacao.component';
 
 export const PAGINAS = [
   LoginComponent,
   InicioComponent,
   InicioSaldoComponent,
   InicioExtratoComponent,
-  CaixaFinanceiroComponent
+  CaixaFinanceiroComponent,
+  TransacaoComponent
 ];
 
 export const Paginas = {
@@ -20,7 +22,8 @@ export const Paginas = {
   InicioComponent,
   InicioSaldoComponent,
   InicioExtratoComponent,
-  CaixaFinanceiroComponent
+  CaixaFinanceiroComponent,
+  TransacaoComponent
 };
 
 export const COMPONENTES = [AdicionarComponent, SairComponent];

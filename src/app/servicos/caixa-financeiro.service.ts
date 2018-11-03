@@ -3,6 +3,7 @@ import { TIPO_CAIXA, CaixaFinanceiro } from '../interfaces';
 import { FirebaseService } from './firebase.service';
 import { switchMap, first } from 'rxjs/operators';
 import { QueryFn } from '@angular/fire/firestore';
+import { FormatarDadosService } from './formatar-dados.service';
 
 export const TIPOS_CAIXA: TIPO_CAIXA[] = ['Carteira', 'Cartão Crédito'];
 
@@ -10,10 +11,11 @@ export const TIPOS_CAIXA: TIPO_CAIXA[] = ['Carteira', 'Cartão Crédito'];
   providedIn: 'root'
 })
 export class CaixaFinanceiroService {
-  constructor(private firebase: FirebaseService) {}
+  constructor(private firebase: FirebaseService, private formatarDados: FormatarDadosService) {}
 
   salvar(dados: Partial<CaixaFinanceiro>) {
     dados.id = dados.id || this.firebase.gerarNovoId();
+    dados.nome = this.formatarDados.capitalizar(dados.nome);
 
     return this.obterColecao()
       .pipe(first())

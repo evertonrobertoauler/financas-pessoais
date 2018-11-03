@@ -40,6 +40,16 @@ const routes: Routes = [
     canDeactivate: [FormulariosGuard]
   },
   {
+    path: 'transacao',
+    component: Paginas.TransacaoComponent,
+    canDeactivate: [FormulariosGuard]
+  },
+  {
+    path: 'transacao/:id',
+    component: Paginas.TransacaoComponent,
+    canDeactivate: [FormulariosGuard]
+  },
+  {
     path: '',
     redirectTo: '/inicio/(saldo:saldo)',
     pathMatch: 'full'

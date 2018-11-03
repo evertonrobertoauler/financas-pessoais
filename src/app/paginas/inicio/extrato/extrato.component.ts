@@ -1,4 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngxs/store';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { Transacao } from '../../../interfaces';
+import { TransacaoState, CaixaFinanceiroState } from '../../../ngxs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-inicio-extrato',
@@ -6,7 +12,24 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./extrato.component.scss']
 })
 export class InicioExtratoComponent implements OnInit {
-  constructor() {}
+  public transacoes$: Observable<Transacao[]>;
 
-  ngOnInit() {}
+  constructor(private store: Store, private router: Router) {}
+
+  ngOnInit() {
+    const caixaFinanceiro = id => this.store.select(CaixaFinanceiroState.caixaFinanceiro(id));
+
+    const transacaoFn = (trans: Transacao) => ({
+      ...trans,
+      caixaFinanceiro$: caixaFinanceiro(trans.caixaFinanceiro)
+    });
+
+    this.transacoes$ = this.store
+      .select(TransacaoState.transacoes)
+      .pipe(map(list => list.map(t => transacaoFn(t))));
+  }
+
+  editarTransacao(transacao: Transacao) {
+    this.router.navigate(['transacao', transacao.id]);
+  }
 }

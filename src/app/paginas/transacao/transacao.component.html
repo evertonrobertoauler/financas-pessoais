@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button (click)="voltar()" defaultHref="/inicio"></ion-back-button>
     </ion-buttons>
-    <ion-title>Caixa Financeiro</ion-title>
+    <ion-title>Transação</ion-title>
     <ion-buttons slot="end" *ngIf="id">
       <ion-button color="light" (click)="excluir()">
         <ion-icon slot="icon-only" name="trash"></ion-icon>
@@ -16,8 +16,12 @@
   <form [formGroup]="formulario" appMostrarPrimeiroErro (submit)="salvar()">
     <ion-list>
       <ion-item>
-        <ion-label position="stacked">Nome</ion-label>
-        <ion-input type="text" formControlName="nome" appMostrarErros></ion-input>
+        <ion-label position="stacked">Caixa Financeiro</ion-label>
+        <ion-select placeholder="Selecione um caixa" formControlName="caixaFinanceiro" appMostrarErros>
+          <ion-select-option *ngFor="let caixa of caixas$ | async" [value]="caixa.id">
+            {{ caixa.nome }} ({{ caixa.tipo }})
+          </ion-select-option>
+        </ion-select>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">Tipo</ion-label>
@@ -27,9 +31,19 @@
           </ion-select-option>
         </ion-select>
       </ion-item>
-      <ion-item *ngIf="cartao$ | async">
-        <ion-label position="stacked">Dia da Fatura</ion-label>
-        <ion-input type="number" formControlName="diaFatura" appMostrarErros></ion-input>
+      <ion-item>
+        <ion-label position="stacked">Data Transação</ion-label>
+        <ion-datetime display-format="DD/MM/YYYY" picker-format="DD MM YYYY" formControlName="dataTransacao"
+          appMostrarErros>
+        </ion-datetime>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Valor</ion-label>
+        <ion-input type="tel" formControlName="valor" appMostrarErros appMascara="valor" clear-input></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Descrição</ion-label>
+        <ion-input type="text" formControlName="descricao" appMostrarErros clear-input></ion-input>
       </ion-item>
       <ion-item>
         <ion-label>

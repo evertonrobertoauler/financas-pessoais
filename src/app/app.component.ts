@@ -74,10 +74,8 @@ export class AppComponent implements OnInit {
 
   private async corrigirNavegacao(logado: boolean, evento: NavigationStart) {
     if (!logado && evento.url !== this.URL_LOGIN) {
-      console.log(logado, evento.url);
       this.router.navigateByUrl(this.URL_LOGIN, { skipLocationChange: true });
     } else if (logado && evento.url === this.URL_LOGIN) {
-      console.log(logado, evento.url);
       this.router.navigateByUrl(this.URL_INICIO);
     }
   }

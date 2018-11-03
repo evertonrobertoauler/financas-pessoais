@@ -1,9 +1,9 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CamposCaixaFinanceiro, TIPO_CAIXA } from '../../interfaces';
 import { TIPOS_CAIXA } from '../../servicos';
 import { FormularioComponent } from '../../guardas';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { first, map, tap, filter, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Store } from '@ngxs/store';
@@ -16,9 +16,6 @@ import { AlertController } from '@ionic/angular';
   styleUrls: ['./caixa-financeiro.component.scss']
 })
 export class CaixaFinanceiroComponent implements OnInit, FormularioComponent {
-  @ViewChild('backButton', { read: ElementRef })
-  private backButton: ElementRef;
-
   public submit = false;
   public formulario: FormGroup;
 
@@ -31,8 +28,9 @@ export class CaixaFinanceiroComponent implements OnInit, FormularioComponent {
   constructor(
     private formBuilder: FormBuilder,
     private store: Store,
+    private alertCtrl: AlertController,
     private route: ActivatedRoute,
-    private alertCtrl: AlertController
+    private router: Router
   ) {}
 
   async ngOnInit() {
@@ -66,7 +64,7 @@ export class CaixaFinanceiroComponent implements OnInit, FormularioComponent {
     if (this.formulario.valid) {
       this.submit = true;
       this.store.dispatch(new caixaFinanceiro.SalvarCaixaFinanceiro(this.formulario.value));
-      this.backButton.nativeElement.click();
+      this.voltar();
     }
   }
 
@@ -80,9 +78,14 @@ export class CaixaFinanceiroComponent implements OnInit, FormularioComponent {
     await alert.present();
 
     if ((await alert.onDidDismiss()).role === 'Sim') {
+      this.submit = true;
       this.store.dispatch(new caixaFinanceiro.ExcluirCaixaFinanceiro({ id: this.id }));
-      this.backButton.nativeElement.click();
+      this.voltar();
     }
+  }
+
+  voltar() {
+    this.router.navigateByUrl('/inicio/(saldo:saldo)');
   }
 
   private regrasCartao(cartao: boolean) {
