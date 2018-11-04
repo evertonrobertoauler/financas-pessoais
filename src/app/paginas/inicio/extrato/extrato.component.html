@@ -8,8 +8,11 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-list>
-    <ion-item *ngFor="let transacao of transacoes$ | async" (click)="editarTransacao(transacao)">
+  <ion-list *ngIf="transacoes$ | async as transacoes">
+    <ion-item *ngIf="!transacoes.length" text-wrap>
+      Nenhuma transação cadastrada até o momento!
+    </ion-item>
+    <ion-item *ngFor="let transacao of transacoes" (click)="editarTransacao(transacao)">
       <ion-label>
         <div [ngClass]="transacao.tipo === 'Despesa' ? 'despesa' : 'receita'">
           <h2><b>{{ transacao.tipo }}</b> ({{ transacao.dataTransacao }})</h2>
