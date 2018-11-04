@@ -2,35 +2,36 @@ import { State, Action, NgxsOnInit, StateContext, Selector, createSelector } fro
 import * as actions from './transacao.actions';
 import { TransacaoService } from '../servicos';
 import { Transacao } from '../interfaces';
+import { Mapa, popularMapa, obterValoresMapa } from './helpers';
 
 export const transacao = actions;
 
 export interface TrModel {
-  transacoes: Transacao[];
+  transacoes: Mapa<Transacao>;
 }
 
 @State<TrModel>({
   name: 'TransacaoState',
   defaults: {
-    transacoes: []
+    transacoes: popularMapa([])
   }
 })
 export class TransacaoState implements NgxsOnInit {
   @Selector()
   static transacoes(state: TrModel) {
-    return state.transacoes;
+    return obterValoresMapa(state.transacoes);
   }
 
   static transacao(id: string) {
-    return createSelector([TransacaoState], (state: TrModel) => {
-      return state.transacoes.find(cx => cx.id === id);
-    }) as () => Transacao;
+    const seletor = (state: TrModel) => state.transacoes.get(id);
+    return createSelector([TransacaoState], seletor) as () => Transacao;
   }
 
   constructor(private service: TransacaoService) {}
 
   ngxsOnInit(ctx: StateContext<TrModel>) {
-    this.service.obterTodos().subscribe(transacoes => ctx.patchState({ transacoes }));
+    const fn = list => ctx.patchState({ transacoes: popularMapa(list) });
+    this.service.obterTodos().subscribe(fn);
   }
 
   @Action(actions.SalvarTransacao)
