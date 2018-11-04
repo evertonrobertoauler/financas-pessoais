@@ -6,7 +6,7 @@ export interface CaixaFinanceiro {
   id?: string;
   nome: string;
   tipo: TIPO_CAIXA;
-  diaFatura?: number;
+  diaFechamentoFatura?: number;
   saldoAtual: number;
   saldoFuturo: number;
   dataAtualizacao: Timestamp;

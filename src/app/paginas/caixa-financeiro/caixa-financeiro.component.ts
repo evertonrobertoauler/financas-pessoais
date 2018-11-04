@@ -40,7 +40,7 @@ export class CaixaFinanceiroComponent implements OnInit, FormularioComponent {
       id: [],
       nome: ['', Validators.required],
       tipo: ['', Validators.required],
-      diaFatura: []
+      diaFechamentoFatura: []
     } as CamposCaixaFinanceiro);
 
     this.cartao$ = this.formulario
@@ -61,7 +61,7 @@ export class CaixaFinanceiroComponent implements OnInit, FormularioComponent {
 
     if (caixa.id) {
       this.formulario.get('tipo').disable();
-      this.formulario.get('diaFatura').disable();
+      this.formulario.get('diaFechamentoFatura').disable();
     }
   }
 
@@ -94,15 +94,19 @@ export class CaixaFinanceiroComponent implements OnInit, FormularioComponent {
   }
 
   private regrasCartao(cartao: boolean) {
-    const diaFatura = this.formulario.get('diaFatura');
+    const diaFechamentoFatura = this.formulario.get('diaFechamentoFatura');
 
     if (cartao) {
-      diaFatura.setValidators([Validators.required, Validators.min(1), Validators.max(31)]);
+      diaFechamentoFatura.setValidators([
+        Validators.required,
+        Validators.min(1),
+        Validators.max(31)
+      ]);
     } else {
-      diaFatura.clearValidators();
-      diaFatura.setValue(null);
+      diaFechamentoFatura.clearValidators();
+      diaFechamentoFatura.setValue(null);
     }
 
-    diaFatura.updateValueAndValidity();
+    diaFechamentoFatura.updateValueAndValidity();
   }
 }

@@ -17,7 +17,7 @@
     <ion-list>
       <ion-item>
         <ion-label position="stacked">Nome</ion-label>
-        <ion-input type="text" formControlName="nome" appMostrarErros></ion-input>
+        <ion-input type="text" autocapitalize formControlName="nome" appMostrarErros></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">Tipo</ion-label>
@@ -28,8 +28,8 @@
         </ion-select>
       </ion-item>
       <ion-item *ngIf="cartao$ | async">
-        <ion-label position="stacked">Dia da Fatura</ion-label>
-        <ion-input type="number" formControlName="diaFatura" appMostrarErros></ion-input>
+        <ion-label position="stacked">Dia do Fechamento da Fatura</ion-label>
+        <ion-input type="number" formControlName="diaFechamentoFatura" appMostrarErros></ion-input>
       </ion-item>
       <ion-item>
         <ion-label>

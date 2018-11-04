@@ -115,8 +115,9 @@ async function obterCaixaFinanceiro(usuarioId: string, caixaId: string) {
 
   if (doc.exists) {
     const caixa = doc.data() as CaixaFinanceiro;
-    const data = caixa.diaFatura ? new Date().setDate(caixa.diaFatura) : new Date();
-    return { doc, caixa, data: format(data, 'YYYY-MM-DD') };
+    const dia = caixa.diaFechamentoFatura;
+    const data = format(dia ? new Date().setDate(dia) : new Date(), 'YYYY-MM-DD');
+    return { doc, caixa, data };
   } else {
     return {};
   }
