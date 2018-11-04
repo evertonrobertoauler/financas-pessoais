@@ -11,15 +11,14 @@
   <ion-list>
     <ion-item *ngFor="let transacao of transacoes$ | async" (click)="editarTransacao(transacao)">
       <ion-label>
-        <h1>{{ transacao.dataTransacao }}</h1>
-        <h3 *ngIf="transacao.caixaFinanceiro$ | async as caixa">
-          {{ caixa.nome }} ({{ caixa.tipo }})
-        </h3>
         <div [ngClass]="transacao.tipo === 'Despesa' ? 'despesa' : 'receita'">
-          <h2>{{ transacao.tipo }}</h2>
+          <h2><b>{{ transacao.tipo }}</b> ({{ transacao.dataTransacao }})</h2>
           <p><b>Valor:</b> {{ (transacao.valor || 0) | currency:'BRL' }}</p>
         </div>
-        <p>{{ transacao.descricao }}</p>
+        <p *ngIf="transacao.caixaFinanceiro$ | async as caixa">
+          <b>Caixa:</b> {{ caixa.nome }} ({{ caixa.tipo }})
+        </p>
+        <p><b>Descrição:</b> {{ transacao.descricao }}</p>
       </ion-label>
     </ion-item>
   </ion-list>

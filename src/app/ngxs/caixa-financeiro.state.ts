@@ -47,7 +47,7 @@ export class CaixaFinanceiroState implements NgxsOnInit {
     this.caixa.obterTodos().subscribe(list => {
       ctx.patchState({
         saldoAtual: list.reduce((v, c) => v + (c.saldoAtual || 0), 0),
-        saldoFuturo: list.reduce((v, c) => v + (c.saldoFuturo || 0), 0),
+        saldoFuturo: list.reduce((v, c) => v + (c.saldoAtual || 0) + (c.saldoFuturo || 0), 0),
         caixasFinanceiros: popularMapa(list)
       });
     });

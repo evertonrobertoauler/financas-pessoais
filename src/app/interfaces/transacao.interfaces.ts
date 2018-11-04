@@ -13,6 +13,8 @@ export interface Transacao {
   valor: number;
   dataTransacao: string;
   descricao: string;
+  caixaAtualizado: boolean;
+  caixaFuturo: boolean;
 }
 
 export type CamposTransacao = { [k in keyof Transacao]: any };

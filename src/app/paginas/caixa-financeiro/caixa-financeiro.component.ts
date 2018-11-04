@@ -58,6 +58,11 @@ export class CaixaFinanceiroComponent implements OnInit, FormularioComponent {
     this.id = caixa.id;
 
     this.formulario.patchValue(caixa);
+
+    if (caixa.id) {
+      this.formulario.get('tipo').disable();
+      this.formulario.get('diaFatura').disable();
+    }
   }
 
   salvar() {

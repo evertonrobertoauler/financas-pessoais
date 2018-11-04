@@ -19,7 +19,9 @@ export class TransacaoService {
       id: dados.id || this.firebase.gerarNovoId(),
       descricao: this.formatarDados.capitalizar(dados.descricao),
       valor: this.formatarDados.valorToNumber(dados.valor),
-      dataCadastro: dados.dataCadastro || this.firebase.serverTimestamp()
+      dataCadastro: dados.dataCadastro || this.firebase.serverTimestamp(),
+      caixaAtualizado: false,
+      caixaFuturo: false
     };
 
     return this.obterColecao()

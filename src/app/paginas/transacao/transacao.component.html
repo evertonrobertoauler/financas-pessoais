@@ -17,7 +17,8 @@
     <ion-list>
       <ion-item>
         <ion-label position="stacked">Caixa Financeiro</ion-label>
-        <ion-select placeholder="Selecione um caixa" formControlName="caixaFinanceiro" appMostrarErros>
+        <ion-select placeholder="Selecione um caixa" interface="popover" formControlName="caixaFinanceiro"
+          appMostrarErros>
           <ion-select-option *ngFor="let caixa of caixas$ | async" [value]="caixa.id">
             {{ caixa.nome }} ({{ caixa.tipo }})
           </ion-select-option>

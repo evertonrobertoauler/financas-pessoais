@@ -11,15 +11,27 @@
   <ion-list>
     <ion-item>
       <ion-label>
-        <p><b>Saldo Atual Geral:</b> {{ saldoAtual$ | async | currency:'BRL' }}</p>
-        <p><b>Saldo Futuro Geral:</b> {{ saldoFuturo$ | async | currency:'BRL' }}</p>
+        <h2 [ngClass]="(saldoAtual$ | async) < 0 ? 'negativo' : 'positivo'">
+          <b>Saldo Atual Geral:</b>
+          {{ saldoAtual$ | async | currency:'BRL' }}
+        </h2>
+        <h2 [ngClass]="(saldoFuturo$ | async) < 0 ? 'negativo' : 'positivo'">
+          <b>Saldo Futuro Geral:</b>
+          {{ saldoFuturo$ | async | currency:'BRL' }}
+        </h2>
       </ion-label>
     </ion-item>
     <ion-item *ngFor="let caixa of caixasFinanceiros$ | async" (click)="editarCaixa(caixa)">
       <ion-label>
-        <h2>{{ caixa.nome }} ({{ caixa.tipo }})</h2>
-        <p><b>Saldo Atual:</b> {{ (caixa.saldoAtual || 0) | currency:'BRL' }}</p>
-        <p><b>Saldo Futuro:</b> {{ (caixa.saldoFuturo || 0) | currency:'BRL' }}</p>
+        <h2><b>{{ caixa.nome }}</b> ({{ caixa.tipo }})</h2>
+        <p [ngClass]="(caixa.saldoAtual || 0) < 0 ? 'negativo' : 'positivo'">
+          <b>Saldo Atual:</b>
+          {{ (caixa.saldoAtual || 0) | currency:'BRL' }}
+        </p>
+        <p [ngClass]="(caixa.saldoAtual || 0) + (caixa.saldoFuturo || 0) < 0 ? 'negativo' : 'positivo'">
+          <b>Saldo Futuro:</b>
+          {{ (caixa.saldoAtual || 0) + (caixa.saldoFuturo || 0) | currency:'BRL' }}
+        </p>
       </ion-label>
     </ion-item>
   </ion-list>
