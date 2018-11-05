@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { CaixaFinanceiroState } from '../../../ngxs';
+import { CaixaFinanceiroState, navegacao } from '../../../ngxs';
 import { CaixaFinanceiro } from '../../../interfaces';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-inicio-saldo',
@@ -15,7 +14,7 @@ export class InicioSaldoComponent implements OnInit {
   public saldoFuturo$: Observable<number>;
   public caixasFinanceiros$: Observable<CaixaFinanceiro[]>;
 
-  constructor(private store: Store, private router: Router) {}
+  constructor(private store: Store) {}
 
   ngOnInit() {
     this.saldoAtual$ = this.store.select(CaixaFinanceiroState.saldoAtual);
@@ -24,6 +23,10 @@ export class InicioSaldoComponent implements OnInit {
   }
 
   editarCaixa(caixa: CaixaFinanceiro) {
-    this.router.navigate(['caixa-financeiro', caixa.id]);
+    this.store.dispatch(new navegacao.NavegarPara({ caminho: ['caixa-financeiro', caixa.id] }));
+  }
+
+  adicionarCaixa() {
+    this.store.dispatch(new navegacao.NavegarPara({ caminho: ['caixa-financeiro'] }));
   }
 }

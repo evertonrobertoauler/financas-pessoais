@@ -36,6 +36,11 @@ export class CaixaFinanceiroState implements NgxsOnInit {
     return obterValoresMapa(state.caixasFinanceiros);
   }
 
+  @Selector()
+  static possuiCaixasCadastrado(state: CxModel) {
+    return state.caixasFinanceiros.size > 0;
+  }
+
   static caixaFinanceiro(id: string) {
     const seletor = (state: CxModel) => state.caixasFinanceiros.get(id);
     return createSelector([CaixaFinanceiroState], seletor) as () => CaixaFinanceiro;

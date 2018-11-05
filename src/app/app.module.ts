@@ -12,7 +12,8 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { STATES } from './ngxs';
 import { SERVICOS } from './servicos';
-import { PAGINAS, COMPONENTES, MODAIS } from './paginas';
+import { PAGINAS } from './paginas';
+import { COMPONENTES } from './componentes';
 import { DIRETIVAS } from './diretivas';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -23,8 +24,7 @@ import { NgxsModule } from '@ngxs/store';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [AppComponent, ...PAGINAS, ...COMPONENTES, ...MODAIS, ...DIRETIVAS],
-  entryComponents: [...MODAIS],
+  declarations: [AppComponent, ...PAGINAS, ...COMPONENTES, ...DIRETIVAS],
   imports: [
     BrowserModule,
     AppRoutingModule,

@@ -3,11 +3,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CamposCaixaFinanceiro, TIPO_CAIXA } from '../../interfaces';
 import { TIPOS_CAIXA } from '../../servicos';
 import { FormularioComponent } from '../../guardas';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { first, map, tap, filter, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Store } from '@ngxs/store';
-import { CaixaFinanceiroState, caixaFinanceiro } from '../../ngxs';
+import { CaixaFinanceiroState, caixaFinanceiro, navegacao } from '../../ngxs';
 import { AlertController } from '@ionic/angular';
 
 @Component({
@@ -29,8 +29,7 @@ export class CaixaFinanceiroComponent implements OnInit, FormularioComponent {
     private formBuilder: FormBuilder,
     private store: Store,
     private alertCtrl: AlertController,
-    private route: ActivatedRoute,
-    private router: Router
+    private route: ActivatedRoute
   ) {}
 
   async ngOnInit() {
@@ -90,7 +89,7 @@ export class CaixaFinanceiroComponent implements OnInit, FormularioComponent {
   }
 
   voltar() {
-    this.router.navigateByUrl('/inicio/(saldo:saldo)');
+    this.store.dispatch(new navegacao.VoltarParaTelaAnterior());
   }
 
   private regrasCartao(cartao: boolean) {

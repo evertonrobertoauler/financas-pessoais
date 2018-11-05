@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { login } from '../../../ngxs';
 import { AlertController } from '@ionic/angular';
+import { login } from '../../ngxs';
 
 @Component({
   selector: 'app-sair',

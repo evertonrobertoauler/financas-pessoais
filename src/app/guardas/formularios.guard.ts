@@ -8,7 +8,7 @@ export interface FormularioComponent {
   submit: boolean;
 }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class FormulariosGuard implements CanDeactivate<FormularioComponent> {
   constructor(private alertCtrl: AlertController) {}
 

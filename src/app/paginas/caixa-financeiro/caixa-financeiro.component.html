@@ -1,7 +1,9 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
-      <ion-back-button (click)="voltar()" defaultHref="/inicio"></ion-back-button>
+      <ion-buttons slot="start">
+        <app-voltar></app-voltar>
+      </ion-buttons>
     </ion-buttons>
     <ion-title>Caixa Financeiro</ion-title>
     <ion-buttons slot="end" *ngIf="id">

@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Transacao } from '../../../interfaces';
-import { TransacaoState, CaixaFinanceiroState } from '../../../ngxs';
+import { TransacaoState, CaixaFinanceiroState, navegacao } from '../../../ngxs';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -14,7 +13,7 @@ import { map } from 'rxjs/operators';
 export class InicioExtratoComponent implements OnInit {
   public transacoes$: Observable<Transacao[]>;
 
-  constructor(private store: Store, private router: Router) {}
+  constructor(private store: Store) {}
 
   ngOnInit() {
     const caixaFinanceiro = id => this.store.select(CaixaFinanceiroState.caixaFinanceiro(id));
@@ -30,6 +29,10 @@ export class InicioExtratoComponent implements OnInit {
   }
 
   editarTransacao(transacao: Transacao) {
-    this.router.navigate(['transacao', transacao.id]);
+    this.store.dispatch(new navegacao.NavegarPara({ caminho: ['transacao', transacao.id] }));
+  }
+
+  adicionarTransacao() {
+    this.store.dispatch(new navegacao.NavegarPara({ caminho: ['transacao'] }));
   }
 }

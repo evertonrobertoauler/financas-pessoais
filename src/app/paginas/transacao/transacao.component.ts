@@ -4,10 +4,10 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Store } from '@ngxs/store';
 import { AlertController } from '@ionic/angular';
 import { CaixaFinanceiro, CamposTransacao, TIPO_TRANSACAO } from '../../interfaces';
-import { transacao, CaixaFinanceiroState, TransacaoState } from '../../ngxs';
+import { transacao, CaixaFinanceiroState, TransacaoState, navegacao } from '../../ngxs';
 import { Observable } from 'rxjs';
 import { TIPOS_TRANSACAO, FormatarDadosService } from '../../servicos';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { filter, switchMap, first } from 'rxjs/operators';
 
 @Component({
@@ -29,8 +29,7 @@ export class TransacaoComponent implements OnInit, FormularioComponent {
     private store: Store,
     private alertCtrl: AlertController,
     private formatarDados: FormatarDadosService,
-    private route: ActivatedRoute,
-    private router: Router
+    private route: ActivatedRoute
   ) {}
 
   async ngOnInit() {
@@ -85,6 +84,6 @@ export class TransacaoComponent implements OnInit, FormularioComponent {
   }
 
   voltar() {
-    this.router.navigateByUrl('/inicio/(extrato:extrato)');
+    this.store.dispatch(new navegacao.VoltarParaTelaAnterior());
   }
 }

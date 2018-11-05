@@ -21,8 +21,11 @@
         </h2>
       </ion-label>
     </ion-item>
-    <ion-item *ngIf="!caixasFinanceiros.length" text-wrap>
-      Nenhum caixa financeiro cadastrado até o momento!
+    <ion-item *ngIf="!caixasFinanceiros.length">
+      <ion-label text-wrap>
+        <h3>Nenhum Caixa Financeiro cadastrado até o momento!</h3>
+        <p>Precione o botão (+) no canto inferior direito para cadastrar.</p>
+      </ion-label>
     </ion-item>
     <ion-item *ngFor="let caixa of caixasFinanceiros" (click)="editarCaixa(caixa)">
       <ion-label>
@@ -39,6 +42,8 @@
     </ion-item>
   </ion-list>
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <app-adicionar></app-adicionar>
+    <ion-fab-button (click)="adicionarCaixa()" color="secondary">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
   </ion-fab>
 </ion-content>

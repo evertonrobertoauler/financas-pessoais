@@ -70,17 +70,22 @@ export class FirebaseService {
         .toPromise()
         .catch(() => ({ exists: false, data: () => dados }));
 
+    const onError = e => console.error(operacao, doc.ref.path, dados, e);
+
     switch (operacao) {
       case 'salvar':
         if ((await docFn()).exists) {
-          doc.update(dados);
+          doc
+            .update(dados)
+            .catch(() => doc.set(dados))
+            .catch(onError);
         } else {
-          doc.set(dados);
+          doc.set(dados).catch(onError);
         }
 
         return (await docFn()).data() as T;
       case 'excluir':
-        doc.delete();
+        doc.delete().catch(onError);
         return null;
     }
   }
