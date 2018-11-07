@@ -17,4 +17,14 @@ export interface Transacao {
   caixaFuturo: boolean;
 }
 
+export interface Transferencia {
+  caixaOrigem: string;
+  caixaDestino: string;
+  valor: number;
+  dataTransacao: string;
+  descricao?: string;
+}
+
 export type CamposTransacao = { [k in keyof Transacao]: any };
+
+export type CamposTransferencia = { [k in keyof Transferencia]: any };

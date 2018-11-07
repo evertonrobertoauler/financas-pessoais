@@ -3,7 +3,9 @@ import { InicioComponent } from './inicio/inicio.component';
 import { InicioSaldoComponent } from './inicio/saldo/saldo.component';
 import { InicioExtratoComponent } from './inicio/extrato/extrato.component';
 import { CaixaFinanceiroComponent } from './caixa-financeiro/caixa-financeiro.component';
-import { TransacaoComponent } from './transacao/transacao.component';
+import { OperacaoTransacaoComponent } from './operacao/transacao/transacao.component';
+import { OperacaoComponent } from './operacao/operacao.component';
+import { OperacaoTransferenciaComponent } from './operacao/transferencia/transferencia.component';
 
 export const PAGINAS = [
   LoginComponent,
@@ -11,7 +13,9 @@ export const PAGINAS = [
   InicioSaldoComponent,
   InicioExtratoComponent,
   CaixaFinanceiroComponent,
-  TransacaoComponent
+  OperacaoComponent,
+  OperacaoTransacaoComponent,
+  OperacaoTransferenciaComponent
 ];
 
 export const Paginas = {
@@ -20,5 +24,7 @@ export const Paginas = {
   InicioSaldoComponent,
   InicioExtratoComponent,
   CaixaFinanceiroComponent,
-  TransacaoComponent
+  OperacaoComponent,
+  OperacaoTransacaoComponent,
+  OperacaoTransferenciaComponent
 };

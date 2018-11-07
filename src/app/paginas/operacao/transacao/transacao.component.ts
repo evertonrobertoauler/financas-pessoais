@@ -1,21 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { FormularioComponent } from '../../guardas';
+import { FormularioComponent } from '../../../guardas';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Store } from '@ngxs/store';
 import { AlertController } from '@ionic/angular';
-import { CaixaFinanceiro, CamposTransacao, TIPO_TRANSACAO } from '../../interfaces';
-import { transacao, CaixaFinanceiroState, TransacaoState, navegacao } from '../../ngxs';
+import { CaixaFinanceiro, CamposTransacao, TIPO_TRANSACAO } from '../../../interfaces';
+import { transacao, CaixaFinanceiroState, TransacaoState, navegacao } from '../../../ngxs';
 import { Observable } from 'rxjs';
-import { TIPOS_TRANSACAO, FormatarDadosService } from '../../servicos';
+import { TIPOS_TRANSACAO, FormatarDadosService } from '../../../servicos';
 import { ActivatedRoute } from '@angular/router';
 import { filter, switchMap, first } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-transacao',
+  selector: 'app-operacao-transacao',
   templateUrl: './transacao.component.html',
   styleUrls: ['./transacao.component.scss']
 })
-export class TransacaoComponent implements OnInit, FormularioComponent {
+export class OperacaoTransacaoComponent implements OnInit, FormularioComponent {
   formulario: FormGroup;
   submit: boolean;
 
@@ -40,9 +40,9 @@ export class TransacaoComponent implements OnInit, FormularioComponent {
       dataCadastro: [],
       caixaFinanceiro: ['', Validators.required],
       tipo: ['Despesa' as TIPO_TRANSACAO, Validators.required],
-      dataTransacao: [dataAtual, Validators.required],
+      descricao: ['', Validators.required],
       valor: ['', [Validators.required]],
-      descricao: ['', Validators.required]
+      dataTransacao: [dataAtual, Validators.required]
     } as CamposTransacao);
 
     this.caixas$ = this.store.select(CaixaFinanceiroState.caixasFinanceiros);

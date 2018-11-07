@@ -43,4 +43,9 @@ export class TransacaoState implements NgxsOnInit {
   async excluirTransacao(_: any, action: actions.ExcluirTransacao) {
     await this.service.excluir(action.payload.id);
   }
+
+  @Action(actions.SalvarTransferencia)
+  async salvarTransferencia(_: any, action: actions.SalvarTransferencia) {
+    await this.service.salvarTransferencia(action.payload);
+  }
 }

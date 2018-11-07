@@ -31,6 +31,11 @@ export class NavegacaoState implements NgxsOnInit {
     return historico.last() === ROTA_LOGIN;
   }
 
+  @Selector()
+  static telaAtual({ historico }: NavModel) {
+    return historico.last<string>() || '';
+  }
+
   constructor(private router: Router, private ngZone: NgZone, private platform: Platform) {}
 
   ngxsOnInit(ctx: StateContext<NavModel>) {
@@ -72,7 +77,6 @@ export class NavegacaoState implements NgxsOnInit {
     const historico = ctx.getState().historico.pop();
 
     if (historico.size) {
-      ctx.patchState({ historico });
       history.back();
     }
   }

@@ -1,20 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ExtratoComponent } from './extrato.component';
+import { InicioExtratoComponent } from './extrato.component';
 
-describe('ExtratoComponent', () => {
-  let component: ExtratoComponent;
-  let fixture: ComponentFixture<ExtratoComponent>;
+describe('InicioExtratoComponent', () => {
+  let component: InicioExtratoComponent;
+  let fixture: ComponentFixture<InicioExtratoComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ExtratoComponent ]
-    })
-    .compileComponents();
+      declarations: [InicioExtratoComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ExtratoComponent);
+    fixture = TestBed.createComponent(InicioExtratoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

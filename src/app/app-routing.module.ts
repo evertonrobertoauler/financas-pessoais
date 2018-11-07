@@ -44,14 +44,32 @@ const routes: Routes = [
     canDeactivate: [FormulariosGuard]
   },
   {
-    path: 'transacao',
-    component: Paginas.TransacaoComponent,
+    path: 'operacao',
+    component: Paginas.OperacaoComponent,
     canActivate: [LoginGuard],
-    canDeactivate: [FormulariosGuard]
+    children: [
+      {
+        path: 'transacao',
+        outlet: 'operacao',
+        component: Paginas.OperacaoTransacaoComponent,
+        canDeactivate: [FormulariosGuard]
+      },
+      {
+        path: 'transferencia',
+        outlet: 'operacao',
+        component: Paginas.OperacaoTransferenciaComponent,
+        canDeactivate: [FormulariosGuard]
+      },
+      {
+        path: '**',
+        redirectTo: '/operacao/(operacao:transacao)',
+        pathMatch: 'full'
+      }
+    ]
   },
   {
     path: 'transacao/:id',
-    component: Paginas.TransacaoComponent,
+    component: Paginas.OperacaoTransacaoComponent,
     canActivate: [LoginGuard],
     canDeactivate: [FormulariosGuard]
   },

@@ -32,7 +32,7 @@ export class InicioExtratoComponent implements OnInit {
     this.store.dispatch(new navegacao.NavegarPara({ caminho: ['transacao', transacao.id] }));
   }
 
-  adicionarTransacao() {
-    this.store.dispatch(new navegacao.NavegarPara({ caminho: ['transacao'] }));
+  adicionarOperacao() {
+    this.store.dispatch(new navegacao.NavegarPara({ caminho: '/operacao/(operacao:transacao)' }));
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { TIPO_TRANSACAO, Transacao } from '../interfaces';
+import { TIPO_TRANSACAO, Transacao, Transferencia } from '../interfaces';
 import { FirebaseService } from './firebase.service';
 import { FormatarDadosService } from './formatar-dados.service';
 import { first, switchMap } from 'rxjs/operators';
@@ -13,7 +13,7 @@ export const TIPOS_TRANSACAO: TIPO_TRANSACAO[] = ['Receita', 'Despesa'];
 export class TransacaoService {
   constructor(private firebase: FirebaseService, private formatarDados: FormatarDadosService) {}
 
-  salvar(dados: Partial<Transacao>) {
+  async salvar(dados: Partial<Transacao>) {
     dados = {
       ...dados,
       id: dados.id || this.firebase.gerarNovoId(),
@@ -28,6 +28,28 @@ export class TransacaoService {
       .pipe(first())
       .pipe(switchMap(c => this.firebase.operacao('salvar', c.doc(dados.id), dados)))
       .toPromise();
+  }
+
+  async salvarTransferencia(dados: Transferencia) {
+    await this.salvar({
+      id: this.firebase.gerarNovoId(),
+      dataCadastro: this.firebase.serverTimestamp(),
+      caixaFinanceiro: dados.caixaOrigem,
+      tipo: 'Despesa',
+      descricao: dados.descricao,
+      valor: dados.valor,
+      dataTransacao: dados.dataTransacao
+    });
+
+    await this.salvar({
+      id: this.firebase.gerarNovoId(),
+      dataCadastro: this.firebase.serverTimestamp(),
+      caixaFinanceiro: dados.caixaDestino,
+      tipo: 'Receita',
+      descricao: dados.descricao,
+      valor: dados.valor,
+      dataTransacao: dados.dataTransacao
+    });
   }
 
   excluir(id: string) {
