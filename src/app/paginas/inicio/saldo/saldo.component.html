@@ -13,11 +13,11 @@
       <ion-label>
         <h2 [ngClass]="(saldoAtual$ | async) < 0 ? 'negativo' : 'positivo'">
           <b>Saldo Atual Geral:</b>
-          {{ saldoAtual$ | async | currency:'BRL' }}
+          {{ saldoAtual$ | async | formatarValor:'R$ ' }}
         </h2>
         <h2 [ngClass]="(saldoFuturo$ | async) < 0 ? 'negativo' : 'positivo'">
           <b>Saldo Futuro Geral:</b>
-          {{ saldoFuturo$ | async | currency:'BRL' }}
+          {{ saldoFuturo$ | async | formatarValor:'R$ ' }}
         </h2>
       </ion-label>
     </ion-item>
@@ -32,11 +32,11 @@
         <h2><b>{{ caixa.nome }}</b> ({{ caixa.tipo }})</h2>
         <p [ngClass]="(caixa.saldoAtual || 0) < 0 ? 'negativo' : 'positivo'">
           <b>Saldo Atual:</b>
-          {{ (caixa.saldoAtual || 0) | currency:'BRL' }}
+          {{ (caixa.saldoAtual || 0) | formatarValor:'R$ ' }}
         </p>
         <p [ngClass]="(caixa.saldoAtual || 0) + (caixa.saldoFuturo || 0) < 0 ? 'negativo' : 'positivo'">
           <b>Saldo Futuro:</b>
-          {{ (caixa.saldoAtual || 0) + (caixa.saldoFuturo || 0) | currency:'BRL' }}
+          {{ (caixa.saldoAtual || 0) + (caixa.saldoFuturo || 0) | formatarValor:'R$ ' }}
         </p>
       </ion-label>
     </ion-item>

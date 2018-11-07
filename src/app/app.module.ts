@@ -15,6 +15,7 @@ import { SERVICOS } from './servicos';
 import { PAGINAS } from './paginas';
 import { COMPONENTES } from './componentes';
 import { DIRETIVAS } from './diretivas';
+import { PIPES } from './pipes';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -24,7 +25,7 @@ import { NgxsModule } from '@ngxs/store';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [AppComponent, ...PAGINAS, ...COMPONENTES, ...DIRETIVAS],
+  declarations: [AppComponent, ...PAGINAS, ...COMPONENTES, ...DIRETIVAS, ...PIPES],
   imports: [
     BrowserModule,
     AppRoutingModule,

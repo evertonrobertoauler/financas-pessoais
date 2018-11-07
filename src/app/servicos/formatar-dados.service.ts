@@ -9,9 +9,9 @@ export class FormatarDadosService {
 
   formatarValor(valor: number | string) {
     if (typeof valor === 'number') {
-      return VMasker.toMoney(valor.toFixed(2));
+      return (valor < 0 ? '-' : '') + VMasker.toMoney(valor.toFixed(2));
     } else {
-      return valor ? VMasker.toMoney(valor) : valor;
+      return valor ? (valor[0] === '-' ? '-' : '') + VMasker.toMoney(valor) : valor;
     }
   }
 
@@ -42,17 +42,27 @@ export class FormatarDadosService {
   }
 
   formatarData(data: Date | string, formato: string) {
-    return data ? format(data, formato, { locale: pt }) : '';
+    return this.capitalizarPalavras((data && format(data, formato, { locale: pt })) || '');
   }
 
   formatarDistanciaData(data: Date | string) {
-    return data ? distanceInWordsToNow(data, { locale: pt }) : '';
+    const retorno = (data && distanceInWordsToNow(data, { locale: pt, addSuffix: true })) || '';
+    return retorno.replace(/aproximadamente/, 'aprox.');
   }
 
   capitalizar(str: string) {
     if (typeof str === 'string') {
-      str = str.trim();
-      return str.slice(0, 1).toUpperCase() + str.slice(1);
+      return str.replace(/^\s*\w/gi, l => l.toUpperCase());
+    } else {
+      return str;
+    }
+  }
+
+  capitalizarPalavras(str: string) {
+    const PREPOSICOES = ['a', 'com', 'em', 'por', 'entre', 'sem', 'de', 'para', 'sob', 'desde'];
+
+    if (typeof str === 'string') {
+      return str.replace(/\b\w+/gi, w => (PREPOSICOES.indexOf(w) !== -1 ? w : this.capitalizar(w)));
     } else {
       return str;
     }

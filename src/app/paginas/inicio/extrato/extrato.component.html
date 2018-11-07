@@ -20,9 +20,13 @@
     </ion-item>
     <ion-item *ngFor="let transacao of transacoes" (click)="editarTransacao(transacao)">
       <ion-label>
+        <div class="data-cadastro">
+          {{ transacao.dataCadastro | formatarData:'distancia' }}
+        </div>
         <div [ngClass]="transacao.tipo === 'Despesa' ? 'despesa' : 'receita'">
-          <h2><b>{{ transacao.tipo }}</b> ({{ transacao.dataTransacao }})</h2>
-          <p><b>Valor:</b> {{ (transacao.valor || 0) | currency:'BRL' }}</p>
+          <h2><b>{{ transacao.tipo }}</b></h2>
+          <p><b>Data:</b> {{ transacao.dataTransacao | formatarData:'DD [de] MMMM [de] YYYY' }}</p>
+          <p><b>Valor:</b> {{ (transacao.valor || 0) | formatarValor:'R$ ' }}</p>
         </div>
         <p *ngIf="transacao.caixaFinanceiro$ | async as caixa">
           <b>Caixa:</b> {{ caixa.nome }} ({{ caixa.tipo }})

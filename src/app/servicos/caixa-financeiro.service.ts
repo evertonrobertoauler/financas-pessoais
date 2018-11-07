@@ -15,7 +15,7 @@ export class CaixaFinanceiroService {
 
   salvar(dados: Partial<CaixaFinanceiro>) {
     dados.id = dados.id || this.firebase.gerarNovoId();
-    dados.nome = this.formatarDados.capitalizar(dados.nome);
+    dados.nome = this.formatarDados.capitalizarPalavras(dados.nome);
 
     return this.obterColecao()
       .pipe(first())
