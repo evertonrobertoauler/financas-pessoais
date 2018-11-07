@@ -72,7 +72,8 @@ export class NavegacaoState implements NgxsOnInit {
     const historico = ctx.getState().historico.pop();
 
     if (historico.size) {
-      await this.navegarParaCaminho(historico.last());
+      ctx.patchState({ historico });
+      history.back();
     }
   }
 

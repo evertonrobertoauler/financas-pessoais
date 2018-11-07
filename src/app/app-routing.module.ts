@@ -15,11 +15,6 @@ const routes: Routes = [
     canActivate: [LoginGuard],
     children: [
       {
-        path: '',
-        redirectTo: '/inicio/(saldo:saldo)',
-        pathMatch: 'full'
-      },
-      {
         path: 'saldo',
         outlet: 'saldo',
         component: Paginas.InicioSaldoComponent
@@ -28,6 +23,11 @@ const routes: Routes = [
         path: 'extrato',
         outlet: 'extrato',
         component: Paginas.InicioExtratoComponent
+      },
+      {
+        path: '**',
+        redirectTo: '/inicio/(saldo:saldo)',
+        pathMatch: 'full'
       }
     ]
   },
