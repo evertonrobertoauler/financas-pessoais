@@ -15,15 +15,15 @@
 </ion-header>
 
 <ion-content padding>
-  <form [formGroup]="formulario" appMostrarPrimeiroErro (submit)="salvar()">
+  <form [formGroup]="formulario" appFormulario (submit)="salvar()">
     <ion-list>
       <ion-item>
         <ion-label position="stacked">Nome</ion-label>
-        <ion-input type="text" autocapitalize formControlName="nome" appMostrarErros></ion-input>
+        <ion-input type="text" autocapitalize formControlName="nome" appCampoFormulario></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">Tipo</ion-label>
-        <ion-select placeholder="Selecione um tipo" interface="popover" formControlName="tipo" appMostrarErros>
+        <ion-select placeholder="Selecione um tipo" interface="popover" formControlName="tipo" appCampoFormulario>
           <ion-select-option *ngFor="let tipo of tipos" [value]="tipo">
             {{ tipo }}
           </ion-select-option>
@@ -31,7 +31,7 @@
       </ion-item>
       <ion-item *ngIf="cartao$ | async">
         <ion-label position="stacked">Dia do Fechamento da Fatura</ion-label>
-        <ion-input type="number" formControlName="diaFechamentoFatura" appMostrarErros></ion-input>
+        <ion-input type="number" formControlName="diaFechamentoFatura" appCampoFormulario></ion-input>
       </ion-item>
       <ion-item>
         <ion-label>

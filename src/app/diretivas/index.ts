@@ -1,9 +1,9 @@
-import { MostrarErrosDirective } from './formularios/mostrar-erros.directive';
-import { MostrarPrimeiroErroDirective } from './formularios/mostrar-primeiro-erro.directive';
+import { FormularioDirective } from './formularios/formulario.directive';
+import { CampoFormularioDirective } from './formularios/campo-formulario.directive';
 import { MascaraDirective } from './formularios/mascara.directive';
 
-export * from './formularios/mostrar-erros.directive';
-export * from './formularios/mostrar-primeiro-erro.directive';
+export * from './formularios/formulario.directive';
+export * from './formularios/campo-formulario.directive';
 export * from './formularios/mascara.directive';
 
-export const DIRETIVAS = [MostrarErrosDirective, MostrarPrimeiroErroDirective, MascaraDirective];
+export const DIRETIVAS = [FormularioDirective, CampoFormularioDirective, MascaraDirective];

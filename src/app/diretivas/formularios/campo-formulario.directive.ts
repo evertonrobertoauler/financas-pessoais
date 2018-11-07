@@ -1,65 +1,65 @@
-import { Directive, AfterViewInit, OnDestroy, Optional } from '@angular/core';
-import { ElementRef, Renderer2 } from '@angular/core';
+import { Directive, AfterViewInit, OnDestroy } from '@angular/core';
+import { Optional, ElementRef, Renderer2 } from '@angular/core';
+import { NgControl, FormControlName } from '@angular/forms';
 import { Subscription, merge, fromEvent } from 'rxjs';
-import { NgControl, FormArrayName, FormControlName } from '@angular/forms';
-import { MostrarPrimeiroErroDirective } from './mostrar-primeiro-erro.directive';
+import { debounceTime, switchMap, filter } from 'rxjs/operators';
+import { FormularioDirective } from './formulario.directive';
 
 @Directive({
-  selector: '[appMostrarErros]'
+  selector: '[appCampoFormulario]'
 })
-export class MostrarErrosDirective implements AfterViewInit, OnDestroy {
-  changes: Subscription;
+export class CampoFormularioDirective implements AfterViewInit, OnDestroy {
+  mudancas: Subscription;
+  fecharTeclado: Subscription;
 
   div: any;
 
   ERROR_COLOR = '#f53d3dd';
 
+  private campo: HTMLElement;
+
   constructor(
-    @Optional() private ngControl: NgControl,
-    @Optional() private ngArrayControl: FormArrayName,
-    @Optional() private mostrarPrimeiroErro: MostrarPrimeiroErroDirective,
+    private formulario: FormularioDirective,
     private el: ElementRef,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    @Optional() private ngControl: NgControl
   ) {}
 
   ngAfterViewInit() {
+    this.campo = this.el.nativeElement;
+
+    this.formulario.registrarCampo(this.campo);
+
     if (this.ngControl instanceof FormControlName) {
       this.criarDivErro();
 
-      const element = this.el.nativeElement;
+      if (this.campo.nodeName.toLowerCase() === 'ion-input') {
+        this.fecharTeclado = fromEvent(this.el.nativeElement, 'ionInputDidLoad')
+          .pipe(
+            switchMap(() => {
+              const nodes = Array.from(this.el.nativeElement.shadowRoot.childNodes);
+              const input = nodes.find((n: any) => n.nodeName === 'INPUT') as any;
+              return fromEvent(input, 'keydown').pipe(filter((e: any) => e.keyCode === 13));
+            })
+          )
+          .subscribe(() => this.formulario.irParaProximoCampo(this.campo));
+      }
 
-      const changes$ = merge(
-        fromEvent(element, 'blur'),
-        fromEvent(element, 'focus'),
+      const mudancas$ = merge(
+        fromEvent(this.campo, 'blur').pipe(debounceTime(700)),
+        fromEvent(this.campo, 'focus'),
         this.ngControl.statusChanges,
-        fromEvent(this.obterForm(element), 'submit')
+        this.formulario.onSubmit$
       );
 
-      this.changes = changes$.subscribe(e => {
+      this.mudancas = mudancas$.subscribe(e => {
         const mostrar =
           (this.ngControl.touched ||
             (e instanceof Event && ['blur', 'submit'].indexOf(e.type) !== -1)) &&
-          element !== document.activeElement;
+          this.campo !== document.activeElement;
 
         if (mostrar && this.ngControl.control.errors) {
           this.mostrarErro(this.ngControl.control.errors);
-        } else {
-          this.removerErro();
-        }
-      });
-    } else if (this.ngArrayControl instanceof FormArrayName) {
-      this.criarDivErro();
-
-      const changes$ = merge(
-        this.ngArrayControl.statusChanges,
-        this.ngArrayControl.formDirective.ngSubmit
-      );
-
-      this.changes = changes$.subscribe(e => {
-        const mostrar = this.ngArrayControl.touched || (e instanceof Event && e.type === 'submit');
-
-        if (mostrar && this.ngArrayControl.control.errors) {
-          this.mostrarErro(this.ngArrayControl.control.errors);
         } else {
           this.removerErro();
         }
@@ -68,8 +68,12 @@ export class MostrarErrosDirective implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.changes instanceof Subscription) {
-      this.changes.unsubscribe();
+    if (this.fecharTeclado instanceof Subscription) {
+      this.fecharTeclado.unsubscribe();
+    }
+
+    if (this.mudancas instanceof Subscription) {
+      this.mudancas.unsubscribe();
     }
   }
 
@@ -86,8 +90,8 @@ export class MostrarErrosDirective implements AfterViewInit, OnDestroy {
     this.renderer.setProperty(this.div, 'textContent', msg);
     this.renderer.setStyle(this.el.nativeElement, 'margin-bottom', '0');
 
-    if (this.mostrarPrimeiroErro) {
-      this.mostrarPrimeiroErro.adicionar(this.obterPath(), this.el.nativeElement, msg);
+    if (this.formulario) {
+      this.formulario.adicionarErro(this.campo, msg);
     }
   }
 
@@ -95,8 +99,8 @@ export class MostrarErrosDirective implements AfterViewInit, OnDestroy {
     this.renderer.setStyle(this.div, 'display', 'none');
     this.renderer.removeStyle(this.el.nativeElement, 'margin-bottom');
 
-    if (this.mostrarPrimeiroErro) {
-      this.mostrarPrimeiroErro.remover(this.obterPath());
+    if (this.formulario) {
+      this.formulario.removerErro(this.campo);
     }
   }
 
@@ -136,24 +140,6 @@ export class MostrarErrosDirective implements AfterViewInit, OnDestroy {
         return 'Senhas diferentes!';
       default:
         return 'Valor inválido!';
-    }
-  }
-
-  obterPath(): string[] {
-    return this.ngControl
-      ? this.ngControl.path
-      : this.ngArrayControl
-        ? this.ngArrayControl.path
-        : [];
-  }
-
-  obterForm(element: HTMLElement): HTMLFormElement | undefined {
-    while (element.parentElement) {
-      if (element.parentElement.tagName.toLowerCase() === 'form') {
-        return element.parentElement as HTMLFormElement;
-      }
-
-      element = element.parentElement;
     }
   }
 }

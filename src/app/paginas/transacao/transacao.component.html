@@ -13,12 +13,12 @@
 </ion-header>
 
 <ion-content padding>
-  <form [formGroup]="formulario" appMostrarPrimeiroErro (submit)="salvar()">
+  <form [formGroup]="formulario" appFormulario (submit)="salvar()">
     <ion-list>
       <ion-item>
         <ion-label position="stacked">Caixa Financeiro</ion-label>
         <ion-select placeholder="Selecione um caixa" interface="popover" formControlName="caixaFinanceiro"
-          appMostrarErros>
+          appCampoFormulario>
           <ion-select-option *ngFor="let caixa of caixas$ | async" [value]="caixa.id">
             {{ caixa.nome }} ({{ caixa.tipo }})
           </ion-select-option>
@@ -26,7 +26,7 @@
       </ion-item>
       <ion-item>
         <ion-label position="stacked">Tipo</ion-label>
-        <ion-select placeholder="Selecione um tipo" interface="popover" formControlName="tipo" appMostrarErros>
+        <ion-select placeholder="Selecione um tipo" interface="popover" formControlName="tipo" appCampoFormulario>
           <ion-select-option *ngFor="let tipo of tipos" [value]="tipo">
             {{ tipo }}
           </ion-select-option>
@@ -35,16 +35,16 @@
       <ion-item>
         <ion-label position="stacked">Data Transação</ion-label>
         <ion-datetime display-format="DD/MM/YYYY" picker-format="DD MM YYYY" formControlName="dataTransacao"
-          appMostrarErros>
+          appCampoFormulario>
         </ion-datetime>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">Valor</ion-label>
-        <ion-input type="tel" formControlName="valor" appMostrarErros appMascara="valor" clear-input></ion-input>
+        <ion-input type="tel" formControlName="valor" appCampoFormulario appMascara="valor" clear-input></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">Descrição</ion-label>
-        <ion-input type="text" autocapitalize formControlName="descricao" appMostrarErros clear-input></ion-input>
+        <ion-input type="text" autocapitalize formControlName="descricao" appCampoFormulario clear-input></ion-input>
       </ion-item>
       <ion-item>
         <ion-label>
