@@ -29,4 +29,8 @@ export class InicioSaldoComponent implements OnInit {
   adicionarCaixa() {
     this.store.dispatch(new navegacao.NavegarPara({ caminho: ['caixa-financeiro'] }));
   }
+
+  adicionarOperacao() {
+    this.store.dispatch(new navegacao.NavegarPara({ caminho: '/operacao/(operacao:transacao)' }));
+  }
 }
