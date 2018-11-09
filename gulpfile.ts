@@ -21,13 +21,17 @@ const copyConfig = cb => shellTask(['cp -rf config.xml cordova/config.xml'])(cb)
 
 const copyConfig16 = cb => shellTask(['cp -rf config-16.xml cordova/config.xml'])(cb);
 
+const baseUrl16 = 'file:///android_asset/www/';
+
 const fixBaseUrl16 = () =>
   src(['cordova/www/index.html'])
-    .pipe(replace('<base href="/">', `<base href="file:///android_asset/www/" />`))
+    .pipe(replace('<base href="/">', `<base href="${baseUrl16}" />`))
     .pipe(dest('cordova/www/'));
 
 const jsFetch = `
   var originalFetch = window.fetch;
+
+  window.appBaseUrl = '${baseUrl16}/index.html';
 
   window.fetch = function () {
       var args = [];
@@ -56,6 +60,8 @@ const addFetch16 = () =>
   src(['cordova/www/index.html'])
     .pipe(replace('</head>', `<script type="text/javascript">${jsFetch}</script></head>`))
     .pipe(dest('cordova/www/'));
+
+const fixIndexHtml16 = series(addCordovaScript, fixBaseUrl16, addFetch16);
 
 const fixAndroidGradleFlavor = () =>
   src(['cordova/platforms/android/build.gradle'])
@@ -134,8 +140,6 @@ export const runAndroidProd =
   existsSync('cordova/www') && existsSync('cordova/platforms/android')
     ? series(buildProd, addCordovaScript, cordovaRunAndroid)
     : series(clean, buildProd, addCordovaScript, addAndroid, cordovaRunAndroid);
-
-const fixIndexHtml16 = series(addCordovaScript, fixBaseUrl16, addFetch16);
 
 export const runAndroid16 =
   existsSync('cordova/www') && existsSync('cordova/platforms/android')

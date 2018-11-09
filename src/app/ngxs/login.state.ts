@@ -56,7 +56,6 @@ export class LoginState implements NgxsOnInit {
   async deslogar(ctx: StateContext<LgModel>) {
     ctx.patchState({ carregando: true });
     await this.firebase.deslogar();
-    window.location.replace('index.html');
-    window.location.reload();
+    window.location.href = (window as any).appBaseUrl || '/';
   }
 }
