@@ -141,3 +141,8 @@ export const runAndroid16 =
   existsSync('cordova/www') && existsSync('cordova/platforms/android')
     ? series(buildDev, fixIndexHtml16, cordovaRunAndroid16)
     : series(clean, buildDev, fixIndexHtml16, addAndroid16, cordovaRunAndroid16);
+
+export const runAndroid16Prod =
+  existsSync('cordova/www') && existsSync('cordova/platforms/android')
+    ? series(buildProd, fixIndexHtml16, cordovaRunAndroid16)
+    : series(clean, buildProd, fixIndexHtml16, addAndroid16, cordovaRunAndroid16);
