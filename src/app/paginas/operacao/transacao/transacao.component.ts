@@ -8,7 +8,7 @@ import { transacao, CaixaFinanceiroState, TransacaoState, navegacao } from '../.
 import { Observable } from 'rxjs';
 import { TIPOS_TRANSACAO, FormatarDadosService } from '../../../servicos';
 import { ActivatedRoute } from '@angular/router';
-import { filter, switchMap, first } from 'rxjs/operators';
+import { filter, switchMap, first, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-operacao-transacao',
@@ -23,6 +23,7 @@ export class OperacaoTransacaoComponent implements OnInit, FormularioComponent {
 
   public tipos = TIPOS_TRANSACAO;
   public caixas$: Observable<CaixaFinanceiro[]>;
+  public caixaSelecionado$: Observable<any>;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -46,6 +47,10 @@ export class OperacaoTransacaoComponent implements OnInit, FormularioComponent {
     } as CamposTransacao);
 
     this.caixas$ = this.store.select(CaixaFinanceiroState.caixasFinanceiros);
+
+    this.caixaSelecionado$ = this.store
+      .select(TransacaoState.caixaSelecionado)
+      .pipe(tap(cx => !this.id && this.formulario.get('caixaFinanceiro').setValue(cx)));
 
     const regTransacao = await this.route.params
       .pipe(filter(p => p && p.id))

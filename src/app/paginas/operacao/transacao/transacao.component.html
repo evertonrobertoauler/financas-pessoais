@@ -11,6 +11,7 @@
 </ion-header>
 
 <ion-content padding>
+  <ng-container *ngIf="(caixaSelecionado$ | async)"></ng-container>
   <form [formGroup]="formulario" appFormulario (submit)="salvar()">
     <ion-list>
       <ion-item>
@@ -62,7 +63,7 @@
       </ion-item>
       <ion-item>
         <ion-label position="stacked">Descrição</ion-label>
-        <ion-textarea formControlName="descricao" appCampoFormulario> </ion-textarea>
+        <ion-input type="text" formControlName="descricao" appCampoFormulario> </ion-input>
       </ion-item>
       <ion-item>
         <ion-label> <ion-button expand="full" type="submit">Salvar</ion-button> </ion-label>

@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Store } from '@ngxs/store';
-import { Observable, combineLatest } from 'rxjs';
+import { Observable, merge } from 'rxjs';
 import { FormularioComponent } from '../../../guardas';
 import { CaixaFinanceiro, CamposTransferencia } from '../../../interfaces';
 import { FormatarDadosService } from '../../../servicos';
-import { CaixaFinanceiroState, transacao, navegacao } from '../../../ngxs';
+import { CaixaFinanceiroState, transacao, navegacao, TransacaoState } from '../../../ngxs';
 import { tap } from 'rxjs/operators';
 
 @Component({
@@ -19,6 +19,7 @@ export class OperacaoTransferenciaComponent implements OnInit, FormularioCompone
 
   public caixas$: Observable<CaixaFinanceiro[]>;
   public descricao$: Observable<any>;
+  public caixaSelecionado$: Observable<any>;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -39,18 +40,23 @@ export class OperacaoTransferenciaComponent implements OnInit, FormularioCompone
 
     this.caixas$ = this.store.select(CaixaFinanceiroState.caixasFinanceiros);
 
-    const origem$ = this.formulario.get('caixaOrigem').valueChanges;
-    const destino$ = this.formulario.get('caixaDestino').valueChanges;
+    const origem = this.formulario.get('caixaOrigem');
+    const destino = this.formulario.get('caixaDestino');
+    const descricao = this.formulario.get('descricao');
+
+    this.caixaSelecionado$ = this.store
+      .select(TransacaoState.caixaSelecionado)
+      .pipe(tap(cx => origem.setValue(cx)));
 
     const fnCaixa = id => {
       const caixa = this.store.selectSnapshot(CaixaFinanceiroState.caixaFinanceiro(id));
       return `${caixa.nome} (${caixa.tipo})`;
     };
 
-    this.descricao$ = combineLatest(origem$, destino$).pipe(
-      tap(([origem, destino]) => {
-        if (origem && destino) {
-          this.formulario.get('descricao').setValue(`${fnCaixa(origem)} -> ${fnCaixa(destino)}`);
+    this.descricao$ = merge(origem.valueChanges, destino.valueChanges).pipe(
+      tap(() => {
+        if (origem.value && destino.value) {
+          descricao.setValue(`${fnCaixa(origem.value)} -> ${fnCaixa(destino.value)}`);
         }
       })
     );

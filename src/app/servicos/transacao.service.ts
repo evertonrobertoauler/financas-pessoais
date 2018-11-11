@@ -7,6 +7,12 @@ import { QueryFn } from '@angular/fire/firestore';
 
 export const TIPOS_TRANSACAO: TIPO_TRANSACAO[] = ['Receita', 'Despesa'];
 
+export const FILTRO_TODOS_CAIXAS = 'todos';
+
+export const CAIXA_FILTRO_FN = caixa => (caixa !== FILTRO_TODOS_CAIXAS ? caixa : '');
+
+export const PAGINACAO = 10;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -63,11 +69,14 @@ export class TransacaoService {
     return this.obterColecao().pipe(switchMap(c => c.doc(id).valueChanges()));
   }
 
-  obterTodos() {
-    const filtros: QueryFn = q =>
-      q.orderBy('dataTransacao', 'desc').orderBy('dataCadastro', 'desc');
+  obterTodos(caixa = FILTRO_TODOS_CAIXAS, limite = PAGINACAO) {
+    const filtros: QueryFn[] = [
+      q => (CAIXA_FILTRO_FN(caixa) ? q.where('caixaFinanceiro', '==', caixa) : q),
+      q => q.orderBy('dataTransacao', 'desc').orderBy('dataCadastro', 'desc'),
+      q => (limite ? q.limit(limite) : q)
+    ];
 
-    return this.obterColecao([filtros]).pipe(switchMap(c => c.valueChanges()));
+    return this.obterColecao(filtros).pipe(switchMap(c => c.valueChanges()));
   }
 
   private obterColecao(filtros?: QueryFn[]) {

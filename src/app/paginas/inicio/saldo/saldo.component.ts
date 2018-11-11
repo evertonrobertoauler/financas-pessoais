@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { CaixaFinanceiroState, navegacao } from '../../../ngxs';
+import { CaixaFinanceiroState, navegacao, transacao } from '../../../ngxs';
 import { CaixaFinanceiro } from '../../../interfaces';
+import { FILTRO_TODOS_CAIXAS } from '../../../servicos';
 
 @Component({
   selector: 'app-inicio-saldo',
@@ -31,6 +32,16 @@ export class InicioSaldoComponent implements OnInit {
   }
 
   adicionarOperacao() {
+    this.store.dispatch(new transacao.FiltrarPorCaixa({ filtroCaixa: FILTRO_TODOS_CAIXAS }));
     this.store.dispatch(new navegacao.NavegarPara({ caminho: '/operacao/(operacao:transacao)' }));
+  }
+
+  abrirExtrato(caixa: CaixaFinanceiro) {
+    this.store.dispatch(new transacao.FiltrarPorCaixa({ filtroCaixa: caixa.id }));
+    this.store.dispatch(new navegacao.NavegarPara({ caminho: '/inicio/(extrato:extrato)' }));
+  }
+
+  calcularSaldoFuturo(caixa: CaixaFinanceiro) {
+    return (caixa.saldoAtual || 0) + (caixa.saldoFuturo || 0);
   }
 }

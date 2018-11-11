@@ -17,6 +17,23 @@
       "collectionId": "transacoes",
       "fields": [
         {
+          "fieldPath": "caixaFinanceiro",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "dataTransacao",
+          "mode": "DESCENDING"
+        },
+        {
+          "fieldPath": "dataCadastro",
+          "mode": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionId": "transacoes",
+      "fields": [
+        {
           "fieldPath": "caixaFuturo",
           "mode": "ASCENDING"
         },

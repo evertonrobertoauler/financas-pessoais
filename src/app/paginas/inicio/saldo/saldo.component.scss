@@ -5,3 +5,15 @@
 .negativo {
   color: var(--ion-color-danger);
 }
+
+.botoes {
+  --padding-top: 12px;
+  --padding-end: 4px;
+  --padding-bottom: 12px;
+  --padding-start: 4px;
+  margin-right: 0;
+}
+
+.botoes + .botoes {
+  margin-left: 6px;
+}
