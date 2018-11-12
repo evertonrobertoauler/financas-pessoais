@@ -92,10 +92,10 @@ async function atualizarTransacaoCaixaFinanceiro(
 
     const updateCaixa: Partial<CaixaFinanceiro> = {};
 
-    if (dataTransacao <= data) {
-      updateCaixa.saldoAtual = (saldoAtual || 0) + valor * operacao;
-    } else {
+    if (dataTransacao > data || (transacao.caixaFuturo && !insert)) {
       updateCaixa.saldoFuturo = (saldoFuturo || 0) + valor * operacao;
+    } else {
+      updateCaixa.saldoAtual = (saldoAtual || 0) + valor * operacao;
     }
 
     console.log(updateCaixa, { saldoAtual, saldoFuturo }, valor, operacao);
