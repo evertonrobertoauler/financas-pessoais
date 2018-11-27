@@ -43,6 +43,7 @@ export class CaixaFinanceiroState implements NgxsOnInit {
 
   static caixaFinanceiro(id: string) {
     const seletor = (state: CxModel) => state.caixasFinanceiros.entidades.get(id);
+    // prettier-ignore
     return createSelector([CaixaFinanceiroState], seletor) as () => CaixaFinanceiro;
   }
 
@@ -66,5 +67,25 @@ export class CaixaFinanceiroState implements NgxsOnInit {
   @Action(actions.ExcluirCaixaFinanceiro)
   async excluirCaixaFinanceiro(_: any, action: actions.ExcluirCaixaFinanceiro) {
     await this.caixa.excluir(action.payload.id);
+  }
+
+  @Action(actions.RecalcularSaldoParcial)
+  async recalcularSaldoParcial() {
+    try {
+      const retorno = await this.caixa.recalcularSaldoParcial().toPromise();
+      console.assert(retorno, 'Função recalcularSaldoParcial retornou false!');
+    } catch (e) {
+      console.error('recalcularSaldoParcial', e);
+    }
+  }
+
+  @Action(actions.RecalcularSaldoTotal)
+  async recalcularSaldoTotal() {
+    try {
+      const retorno = await this.caixa.recalcularSaldoTotal().toPromise();
+      console.assert(retorno, 'Função recalcularSaldoTotal retornou false!');
+    } catch (e) {
+      console.error('recalcularSaldoTotal', e);
+    }
   }
 }

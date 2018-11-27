@@ -8,22 +8,93 @@ admin.initializeApp();
 const firestore = admin.firestore();
 firestore.settings({ timestampsInSnapshots: true });
 
-export const usuarioOnWrite = functions.firestore
-  .document('usuarios/{id}')
-  .onWrite(async (_, ctx) => {
+const controleExecucao = funcao => firestore.collection('controleExecucao').doc(funcao);
+
+export const recalcularSaldoTotal = functions.https.onCall(async (_, ctx) => {
+  const uid = ctx.auth && ctx.auth.uid;
+
+  if (!uid) {
+    return false;
+  }
+
+  const controle = controleExecucao(`recalcularSaldo${uid}`);
+
+  try {
+    if (uid && (await controle.create({}).catch(() => false))) {
+      const dataAtual = format(new Date(), 'YYYY-MM-DD');
+
+      const caixas = await firestore
+        .collection(`usuarios/${uid}/caixasFinanceiros`)
+        .get()
+        .then(q => q.docs);
+
+      for (const caixa of caixas) {
+        const transacoes = await firestore
+          .collection(`usuarios/${uid}/transacoes`)
+          .where('caixaFinanceiro', '==', caixa.id)
+          .get()
+          .then(q => q.docs);
+
+        let [saldoAtual, saldoFuturo] = [0, 0];
+
+        for (const doc of transacoes) {
+          const transacao = doc.data() as Transacao;
+
+          const operacao = transacao.tipo === 'Receita' ? 1 : -1;
+
+          if (transacao.dataTransacao > dataAtual) {
+            saldoFuturo += transacao.valor * operacao;
+          } else {
+            saldoAtual += transacao.valor * operacao;
+
+            if (transacao.caixaFuturo) {
+              const tr = { caixaFuturo: false, caixaAtualizado: true } as Partial<Transacao>;
+              await doc.ref.update(tr);
+            }
+          }
+        }
+
+        const dataAtualizacao = admin.firestore.Timestamp.now();
+        const cx = { saldoAtual, saldoFuturo, dataAtualizacao } as Partial<CaixaFinanceiro>;
+        await caixa.ref.update(cx);
+      }
+    }
+
+    await controle.delete().catch(() => false);
+
+    return true;
+  } catch (e) {
+    await controle.delete().catch(() => false);
+    throw e;
+  }
+});
+
+export const recalcularSaldoParcial = functions.https.onCall(async (_, ctx) => {
+  const uid = ctx.auth && ctx.auth.uid;
+
+  if (!uid) {
+    return false;
+  }
+
+  const controle = controleExecucao(`usuarioOnWrite${uid}`);
+
+  if (await controle.create({}).catch(() => false)) {
     const query = await firestore
-      .collection(`usuarios/${ctx.params.id}/transacoes`)
+      .collection(`usuarios/${uid}/transacoes`)
       .where('dataTransacao', '<=', format(new Date(), 'YYYY-MM-DD'))
       .where('caixaFuturo', '==', true)
       .get();
 
     for (const doc of query.docs) {
-      await excluirTransacaoCaixaFinanceiro(ctx.params.id, doc);
-      await inserirTransacaoCaixaFinanceiro(ctx.params.id, doc);
+      await excluirTransacaoCaixaFinanceiro(uid, doc);
+      await inserirTransacaoCaixaFinanceiro(uid, doc);
     }
 
-    console.log(`${query.size} transações atualizadas!`);
-  });
+    await controle.delete().catch(() => false);
+  }
+
+  return true;
+});
 
 export const transacaoOnCreate = functions.firestore
   .document('usuarios/{id}/transacoes/{transacaoId}')

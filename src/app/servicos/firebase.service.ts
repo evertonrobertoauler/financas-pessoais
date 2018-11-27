@@ -5,6 +5,7 @@ import { Platform } from '@ionic/angular';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { first, filter, map } from 'rxjs/operators';
 import { AngularFirestore, QueryFn, AngularFirestoreDocument } from '@angular/fire/firestore';
+import { AngularFireFunctions } from '@angular/fire/functions';
 import { Timestamp } from '@firebase/firestore-types';
 import { User } from 'firebase/app';
 
@@ -13,7 +14,8 @@ export class FirebaseService {
   constructor(
     private platform: Platform,
     private auth: AngularFireAuth,
-    private firestore: AngularFirestore
+    private firestore: AngularFirestore,
+    private functions: AngularFireFunctions
   ) {}
 
   obterUsuarioLoginObservable() {
@@ -159,5 +161,9 @@ export class FirebaseService {
 
   gerarNovoId() {
     return this.firestore.createId();
+  }
+
+  rodarFuncao(nome: string, parametros?: any) {
+    return this.functions.httpsCallable(nome)(parametros);
   }
 }

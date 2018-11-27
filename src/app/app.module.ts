@@ -5,6 +5,7 @@ import { RouteReuseStrategy } from '@angular/router';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFirestoreModule, FirestoreSettingsToken, Settings } from '@angular/fire/firestore';
+import { AngularFireFunctionsModule, FunctionsRegionToken } from '@angular/fire/functions';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -33,6 +34,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule.enablePersistence(),
     AngularFireAuthModule,
+    AngularFireFunctionsModule,
     NgxsModule.forRoot(STATES),
     ReactiveFormsModule
   ],
@@ -44,6 +46,7 @@ import { ReactiveFormsModule } from '@angular/forms';
       provide: FirestoreSettingsToken,
       useValue: { timestampsInSnapshots: true } as Settings
     },
+    { provide: FunctionsRegionToken, useValue: 'us-central1' },
     ...SERVICOS
   ],
   bootstrap: [AppComponent]

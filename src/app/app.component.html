@@ -1,5 +1,4 @@
-<ion-app>
-  <ion-router-outlet></ion-router-outlet>
-</ion-app>
+<ion-app><ion-router-outlet></ion-router-outlet></ion-app>
 
-<ng-container *ngIf="loading$ | async"></ng-container>
+<ng-container *ngIf="(loading$ | async)"></ng-container>
+<ng-container *ngIf="(logado$ | async)"></ng-container>

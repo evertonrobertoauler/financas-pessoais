@@ -1,7 +1,12 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-title>Saldo</ion-title>
-    <ion-buttons slot="end"> <app-sair></app-sair> </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button color="light" (click)="recalcularSaldoTotal()">
+        <ion-icon slot="icon-only" name="refresh"></ion-icon>
+      </ion-button>
+      <app-sair></app-sair>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 

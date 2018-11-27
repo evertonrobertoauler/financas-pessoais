@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { CaixaFinanceiroState, navegacao, transacao } from '../../../ngxs';
+import { CaixaFinanceiroState, navegacao, transacao, caixaFinanceiro } from '../../../ngxs';
 import { CaixaFinanceiro } from '../../../interfaces';
 import { FILTRO_TODOS_CAIXAS } from '../../../servicos';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-inicio-saldo',
@@ -15,12 +16,25 @@ export class InicioSaldoComponent implements OnInit {
   public saldoFuturo$: Observable<number>;
   public caixasFinanceiros$: Observable<CaixaFinanceiro[]>;
 
-  constructor(private store: Store) {}
+  constructor(private store: Store, private alertCtrl: AlertController) {}
 
   ngOnInit() {
     this.saldoAtual$ = this.store.select(CaixaFinanceiroState.saldoAtual);
     this.saldoFuturo$ = this.store.select(CaixaFinanceiroState.saldoFuturo);
     this.caixasFinanceiros$ = this.store.select(CaixaFinanceiroState.caixasFinanceiros);
+  }
+
+  async recalcularSaldoTotal() {
+    const acao = new caixaFinanceiro.RecalcularSaldoTotal();
+
+    const handler = () => this.store.dispatch(acao);
+    const alert = await this.alertCtrl.create({
+      header: 'Atenção',
+      message: 'Você tem certeza que deseja recalcular o saldo de todos os caixas?',
+      buttons: [{ text: 'Não' }, { text: 'Sim', handler }]
+    });
+
+    await alert.present();
   }
 
   editarCaixa(caixa: CaixaFinanceiro) {

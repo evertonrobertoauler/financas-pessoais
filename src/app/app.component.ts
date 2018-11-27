@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Platform, LoadingController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { Store } from '@ngxs/store';
-import { LoginState } from './ngxs';
+import { LoginState, caixaFinanceiro } from './ngxs';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, filter, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +15,7 @@ export class AppComponent implements OnInit {
   private loading: HTMLIonLoadingElement;
 
   public loading$: Observable<any>;
+  public logado$: Observable<any>;
 
   constructor(
     private platform: Platform,
@@ -27,6 +28,11 @@ export class AppComponent implements OnInit {
     this.loading$ = this.store
       .select(LoginState.carregando)
       .pipe(tap(carregando => this.mostrarLoading(carregando)));
+
+    this.logado$ = this.store
+      .select(LoginState.logado)
+      .pipe(filter(l => l))
+      .pipe(switchMap(() => this.store.dispatch(new caixaFinanceiro.RecalcularSaldoParcial())));
   }
 
   private async mostrarLoading(carregando: boolean) {

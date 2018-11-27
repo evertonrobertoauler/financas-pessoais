@@ -4,6 +4,7 @@ import { FirebaseService } from './firebase.service';
 import { switchMap, first } from 'rxjs/operators';
 import { QueryFn } from '@angular/fire/firestore';
 import { FormatarDadosService } from './formatar-dados.service';
+import { Observable } from 'rxjs';
 
 export const TIPOS_CAIXA: TIPO_CAIXA[] = ['Carteira', 'Cartão Crédito'];
 
@@ -36,6 +37,14 @@ export class CaixaFinanceiroService {
 
   obterTodos() {
     return this.obterColecao([q => q.orderBy('nome')]).pipe(switchMap(c => c.valueChanges()));
+  }
+
+  recalcularSaldoParcial(): Observable<boolean> {
+    return this.firebase.rodarFuncao('recalcularSaldoParcial');
+  }
+
+  recalcularSaldoTotal(): Observable<boolean> {
+    return this.firebase.rodarFuncao('recalcularSaldoTotal');
   }
 
   private obterColecao(filtros?: QueryFn[]) {
