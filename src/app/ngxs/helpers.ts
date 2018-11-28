@@ -1,11 +1,11 @@
-import { Map, List } from 'immutable';
+import { Map, List, OrderedSet } from 'immutable';
 
 export namespace Ngxs {
   export type Mapa<T> = Map<string, T>;
   export type Lista<T> = List<T>;
 
   export class Entidade<T, K = string> {
-    public ids = List<K>([]);
+    public ids = OrderedSet<K>([]);
     public entidades = Map<K, T>([]);
   }
 
@@ -19,7 +19,7 @@ export namespace Ngxs {
     entidade = new Entidade<T, any>()
   ) {
     const fnReduce = (m: Entidade<T, any>, obj: T) => ({
-      ids: m.ids.push(obj[campo]),
+      ids: m.ids.add(obj[campo]),
       entidades: m.entidades.set(obj[campo], obj)
     });
 
@@ -32,14 +32,14 @@ export namespace Ngxs {
 
   export function removerValorEntidade<T = any, K = string>(info: Entidade<T, K>, id: K) {
     return {
-      ids: info.ids.remove(info.ids.indexOf(id)),
+      ids: info.ids.remove(id),
       entidades: info.entidades.remove(id)
     } as Entidade<T, K>;
   }
 
   export function adicionarValorEntidade<T = any, K = string>(info: Entidade<T, K>, obj: T, id: K) {
     return {
-      ids: info.ids.push(id),
+      ids: info.ids.add(id),
       entidades: info.entidades.set(id, obj)
     } as Entidade<T, K>;
   }
@@ -56,7 +56,7 @@ export namespace Ngxs {
     const entidades = (dados && dados.entidades) || {};
 
     return {
-      ids: List(ids),
+      ids: OrderedSet(ids),
       entidades: Map(ids.map(i => [i, entidades[i]]))
     } as Entidade<T, K>;
   }
