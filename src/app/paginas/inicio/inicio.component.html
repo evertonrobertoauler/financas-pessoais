@@ -1,13 +1,12 @@
 <ion-tabs>
-  <ion-tab tab="saldo"> <ion-router-outlet name="saldo"></ion-router-outlet> </ion-tab>
-  <ion-tab tab="extrato"> <ion-router-outlet name="extrato"></ion-router-outlet> </ion-tab>
-  <ion-tab-bar slot="bottom">
-    <ion-tab-button tab="saldo" href="/inicio/(saldo:saldo)">
+  <ion-tab><ion-router-outlet name="tela"></ion-router-outlet></ion-tab>
+  <ion-tab-bar slot="bottom" [selectedTab]="tab$ | async">
+    <ion-tab-button tab="saldo" (click)="abrir('saldo')">
       <ion-icon name="cash"></ion-icon>
       <ion-label>Saldo</ion-label>
     </ion-tab-button>
-    <ion-avatar *ngIf="(usuario$ | async) as usuario"> <img [src]="usuario.foto" /> </ion-avatar>
-    <ion-tab-button tab="extrato" (click)="abrirExtrato()" [disabled]="!(possuiCaixa$ | async)">
+    <ion-avatar *ngIf="(usuario$ | async) as usuario"><img [src]="usuario.foto"/></ion-avatar>
+    <ion-tab-button tab="extrato" (click)="abrir('extrato')" [disabled]="!(possuiCaixa$ | async)">
       <ion-icon name="list-box"></ion-icon>
       <ion-label>Extrato</ion-label>
     </ion-tab-button>

@@ -1,7 +1,9 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes, RouterModule, RouteReuseStrategy } from '@angular/router';
 import { Paginas } from './paginas';
 import { GUARDAS, FormulariosGuard, LoginGuard } from './guardas';
+import { IonicRouteStrategy } from '@ionic/angular';
+import { TELA_LOGIN, TELA_INICIAL } from './ngxs';
 
 const routes: Routes = [
   {
@@ -12,21 +14,22 @@ const routes: Routes = [
   {
     path: 'inicio',
     component: Paginas.InicioComponent,
-    canActivate: [LoginGuard],
     children: [
       {
         path: 'saldo',
-        outlet: 'saldo',
-        component: Paginas.InicioSaldoComponent
+        outlet: 'tela',
+        component: Paginas.InicioSaldoComponent,
+        canActivate: [LoginGuard]
       },
       {
         path: 'extrato',
-        outlet: 'extrato',
-        component: Paginas.InicioExtratoComponent
+        outlet: 'tela',
+        component: Paginas.InicioExtratoComponent,
+        canActivate: [LoginGuard]
       },
       {
         path: '**',
-        redirectTo: '/inicio/(saldo:saldo)',
+        redirectTo: '/inicio/(tela:saldo)',
         pathMatch: 'full'
       }
     ]
@@ -46,18 +49,19 @@ const routes: Routes = [
   {
     path: 'operacao',
     component: Paginas.OperacaoComponent,
-    canActivate: [LoginGuard],
     children: [
       {
         path: 'transacao',
         outlet: 'operacao',
         component: Paginas.OperacaoTransacaoComponent,
+        canActivate: [LoginGuard],
         canDeactivate: [FormulariosGuard]
       },
       {
         path: 'transferencia',
         outlet: 'operacao',
         component: Paginas.OperacaoTransferenciaComponent,
+        canActivate: [LoginGuard],
         canDeactivate: [FormulariosGuard]
       },
       {
@@ -75,14 +79,19 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '/inicio/(saldo:saldo)',
+    redirectTo: '/inicio/(tela:saldo)',
     pathMatch: 'full'
   }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { useHash: true })],
-  providers: [...GUARDAS],
+  providers: [
+    ...GUARDAS,
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    { provide: TELA_LOGIN, useValue: '/login' },
+    { provide: TELA_INICIAL, useValue: '/inicio/(tela:saldo)' }
+  ],
   exports: [RouterModule]
 })
 export class AppRoutingModule {}

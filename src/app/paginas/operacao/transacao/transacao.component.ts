@@ -89,6 +89,7 @@ export class OperacaoTransacaoComponent implements OnInit, FormularioComponent {
   }
 
   voltar() {
-    this.store.dispatch(new navegacao.VoltarParaTelaAnterior());
+    const caminho = '/inicio/(tela:extrato)';
+    this.store.dispatch(new navegacao.NavegarPara({ caminho, nivel: 2 }));
   }
 }

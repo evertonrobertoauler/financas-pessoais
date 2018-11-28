@@ -11,8 +11,7 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
-import { STATES } from './ngxs';
-import { SERVICOS } from './servicos';
+import { STATES, LoginState } from './ngxs';
 import { PAGINAS } from './paginas';
 import { COMPONENTES } from './componentes';
 import { DIRETIVAS } from './diretivas';
@@ -24,6 +23,7 @@ import { AppComponent } from './app.component';
 import { environment } from '../environments/environment';
 import { NgxsModule } from '@ngxs/store';
 import { ReactiveFormsModule } from '@angular/forms';
+import { CARREGANDO_SELECTOR, LOGADO_SELECTOR } from './guardas';
 
 @NgModule({
   declarations: [AppComponent, ...PAGINAS, ...COMPONENTES, ...DIRETIVAS, ...PIPES],
@@ -47,7 +47,8 @@ import { ReactiveFormsModule } from '@angular/forms';
       useValue: { timestampsInSnapshots: true } as Settings
     },
     { provide: FunctionsRegionToken, useValue: 'us-central1' },
-    ...SERVICOS
+    { provide: CARREGANDO_SELECTOR, useValue: LoginState.carregando },
+    { provide: LOGADO_SELECTOR, useValue: LoginState.logado }
   ],
   bootstrap: [AppComponent]
 })

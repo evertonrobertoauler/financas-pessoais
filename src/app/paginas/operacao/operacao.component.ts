@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { navegacao, NavegacaoState } from '../../ngxs';
+import { Observable } from 'rxjs';
+import { delay, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-operacao',
@@ -8,28 +10,25 @@ import { navegacao, NavegacaoState } from '../../ngxs';
   styleUrls: ['./operacao.component.scss']
 })
 export class OperacaoComponent implements OnInit {
-  public tab = '';
+  public tab$: Observable<'transacao' | 'transferencia'>;
+
+  private nivel: number;
 
   constructor(private store: Store) {}
 
   ngOnInit() {
-    setTimeout(() => this.onTabChange(), 500);
+    this.nivel = this.store.selectSnapshot(NavegacaoState.historico).size;
+
+    this.tab$ = this.store
+      .select(NavegacaoState.telaAtual)
+      .pipe(delay(300))
+      .pipe(map(url => (url.match(/transacao/) ? 'transacao' : 'transferencia')));
   }
 
   async navegarPara(tela: 'transacao' | 'transferencia') {
     const caminho = `/operacao/(operacao:${tela})`;
-    const acao = new navegacao.NavegarPara({ caminho: caminho, atualizarUrl: false });
-
+    const nivel = this.nivel + (tela === 'transacao' ? 0 : 1);
+    const acao = new navegacao.NavegarPara({ caminho, nivel });
     await this.store.dispatch(acao).toPromise();
-
-    this.onTabChange(tela);
-  }
-
-  onTabChange(tela = 'transacao') {
-    const caminho = `/operacao/(operacao:${tela})`;
-
-    if (this.store.selectSnapshot(NavegacaoState.telaAtual) === caminho) {
-      this.tab = tela;
-    }
   }
 }

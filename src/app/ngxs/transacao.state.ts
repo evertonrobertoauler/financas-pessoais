@@ -2,21 +2,21 @@ import { State, Action, NgxsOnInit, StateContext, Selector, createSelector } fro
 import * as actions from './transacao.actions';
 import { TransacaoService, FILTRO_TODOS_CAIXAS, CAIXA_FILTRO_FN, PAGINACAO } from '../servicos';
 import { Transacao } from '../interfaces';
-import { popularEntidade, Entidade, obterValoresEntidade } from './helpers';
+import { Ngxs } from './helpers';
 import { Subscription } from 'rxjs';
 
 export const transacao = actions;
 
 export interface TrModel {
   filtroCaixa: string;
-  transacoes: Entidade<Transacao>;
+  transacoes: Ngxs.Entidade<Transacao>;
   limit: number;
 }
 
 @State<TrModel>({
   name: 'TransacaoState',
   defaults: {
-    transacoes: popularEntidade([]),
+    transacoes: Ngxs.popularEntidade([], 'id'),
     filtroCaixa: FILTRO_TODOS_CAIXAS,
     limit: PAGINACAO
   }
@@ -26,7 +26,7 @@ export class TransacaoState implements NgxsOnInit {
 
   @Selector()
   static transacoes(state: TrModel) {
-    return obterValoresEntidade(state.transacoes);
+    return Ngxs.obterValoresEntidade(state.transacoes);
   }
 
   @Selector()
@@ -55,7 +55,7 @@ export class TransacaoState implements NgxsOnInit {
   constructor(private service: TransacaoService) {}
 
   ngxsOnInit(ctx: StateContext<TrModel>) {
-    const fn = list => ctx.patchState({ transacoes: popularEntidade(list) });
+    const fn = list => ctx.patchState({ transacoes: Ngxs.popularEntidade(list, 'id') });
     this.filtro = this.service.obterTodos(ctx.getState().filtroCaixa).subscribe(fn);
   }
 
@@ -86,9 +86,9 @@ export class TransacaoState implements NgxsOnInit {
       this.filtro.unsubscribe();
     }
 
-    const fn = list => ctx.patchState({ transacoes: popularEntidade(list) });
+    const fn = list => ctx.patchState({ transacoes: Ngxs.popularEntidade(list, 'id') });
     this.filtro = this.service.obterTodos(filtroCaixa).subscribe(fn);
-    ctx.patchState({ filtroCaixa, transacoes: popularEntidade([]), limit: PAGINACAO });
+    ctx.patchState({ filtroCaixa, transacoes: Ngxs.popularEntidade([], 'id'), limit: PAGINACAO });
   }
 
   @Action(actions.CarregarMaisTransacoes)
@@ -100,7 +100,7 @@ export class TransacaoState implements NgxsOnInit {
       return await new Promise(resolve => {
         const fn = list => {
           resolve();
-          ctx.patchState({ transacoes: popularEntidade(list) });
+          ctx.patchState({ transacoes: Ngxs.popularEntidade(list, 'id') });
         };
 
         if (this.filtro instanceof Subscription) {

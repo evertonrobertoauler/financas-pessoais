@@ -1,10 +1,17 @@
 import { State, NgxsOnInit, StateContext, Action, Selector } from '@ngxs/store';
 import { FirebaseService, UsuarioService } from '../servicos';
-import * as actions from './login.actions';
 import { Usuario } from '../interfaces';
 import { navegacao } from './navegacao.state';
 
-export const login = actions;
+export namespace login {
+  export class LogarComGoogle {
+    static readonly type = '[Login] Realizar login c/ Google]';
+  }
+
+  export class Deslogar {
+    static readonly type = '[Login] Deslogar usuário]';
+  }
+}
 
 export interface LgModel {
   usuario?: Usuario;
@@ -39,20 +46,20 @@ export class LoginState implements NgxsOnInit {
     ctx.patchState({ usuario, carregando: false });
   }
 
-  @Action(actions.LogarComGoogle)
+  @Action(login.LogarComGoogle)
   async logarComGoogle(ctx: StateContext<LgModel>) {
     try {
       ctx.patchState({ carregando: true });
       const user = await this.firebase.loginComGoogle();
       const usuario = await this.usuario.salvar(user);
       ctx.patchState({ usuario, carregando: false });
-      ctx.dispatch(new navegacao.NavegarPara({ caminho: ['inicio'], limparHistorico: true }));
+      ctx.dispatch(new navegacao.NavegarParaTelaInicial());
     } catch {
       ctx.patchState({ usuario: null, carregando: false });
     }
   }
 
-  @Action(actions.Deslogar)
+  @Action(login.Deslogar)
   async deslogar(ctx: StateContext<LgModel>) {
     ctx.patchState({ carregando: true });
     await this.firebase.deslogar();

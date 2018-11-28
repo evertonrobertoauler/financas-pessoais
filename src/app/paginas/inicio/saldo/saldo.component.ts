@@ -38,11 +38,12 @@ export class InicioSaldoComponent implements OnInit {
   }
 
   editarCaixa(caixa: CaixaFinanceiro) {
-    this.store.dispatch(new navegacao.NavegarPara({ caminho: ['caixa-financeiro', caixa.id] }));
+    const caminho = `/caixa-financeiro/${caixa.id}`;
+    this.store.dispatch(new navegacao.NavegarPara({ caminho }));
   }
 
   adicionarCaixa() {
-    this.store.dispatch(new navegacao.NavegarPara({ caminho: ['caixa-financeiro'] }));
+    this.store.dispatch(new navegacao.NavegarPara({ caminho: '/caixa-financeiro' }));
   }
 
   adicionarOperacao() {
@@ -52,7 +53,7 @@ export class InicioSaldoComponent implements OnInit {
 
   abrirExtrato(caixa: CaixaFinanceiro) {
     this.store.dispatch(new transacao.FiltrarPorCaixa({ filtroCaixa: caixa.id }));
-    this.store.dispatch(new navegacao.NavegarPara({ caminho: '/inicio/(extrato:extrato)' }));
+    this.store.dispatch(new navegacao.NavegarPara({ caminho: '/inicio/(tela:extrato)' }));
   }
 
   calcularSaldoFuturo(caixa: CaixaFinanceiro) {

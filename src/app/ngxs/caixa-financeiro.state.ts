@@ -2,14 +2,14 @@ import { State, Action, NgxsOnInit, StateContext, Selector, createSelector } fro
 import * as actions from './caixa-financeiro.actions';
 import { CaixaFinanceiro } from '../interfaces';
 import { CaixaFinanceiroService } from '../servicos';
-import { Entidade, popularEntidade, obterValoresEntidade } from './helpers';
+import { Ngxs } from './helpers';
 
 export const caixaFinanceiro = actions;
 
 export interface CxModel {
   saldoAtual: number;
   saldoFuturo: number;
-  caixasFinanceiros: Entidade<CaixaFinanceiro>;
+  caixasFinanceiros: Ngxs.Entidade<CaixaFinanceiro>;
 }
 
 @State<CxModel>({
@@ -17,7 +17,7 @@ export interface CxModel {
   defaults: {
     saldoAtual: 0,
     saldoFuturo: 0,
-    caixasFinanceiros: popularEntidade([])
+    caixasFinanceiros: Ngxs.popularEntidade<CaixaFinanceiro>([], 'id')
   }
 })
 export class CaixaFinanceiroState implements NgxsOnInit {
@@ -33,7 +33,7 @@ export class CaixaFinanceiroState implements NgxsOnInit {
 
   @Selector()
   static caixasFinanceiros(state: CxModel) {
-    return obterValoresEntidade(state.caixasFinanceiros);
+    return Ngxs.obterValoresEntidade(state.caixasFinanceiros);
   }
 
   @Selector()
@@ -54,7 +54,7 @@ export class CaixaFinanceiroState implements NgxsOnInit {
       ctx.patchState({
         saldoAtual: list.reduce((v, c) => v + (c.saldoAtual || 0), 0),
         saldoFuturo: list.reduce((v, c) => v + (c.saldoAtual || 0) + (c.saldoFuturo || 0), 0),
-        caixasFinanceiros: popularEntidade(list)
+        caixasFinanceiros: Ngxs.popularEntidade<CaixaFinanceiro>(list, 'id')
       });
     });
   }

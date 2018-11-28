@@ -1,36 +1,40 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Injectable, InjectionToken, Inject } from '@angular/core';
+import { CanActivate, RouterStateSnapshot } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { LoginState, navegacao } from '../ngxs';
-import { filter, switchMap, tap, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { navegacao, TELA_LOGIN, NavegacaoState } from '../ngxs';
+import { filter, switchMap, map, tap } from 'rxjs/operators';
+
+export const CARREGANDO_SELECTOR = new InjectionToken<() => boolean>('CARREGANDO_SELECTOR');
+export const LOGADO_SELECTOR = new InjectionToken<() => boolean>('LOGADO_SELECTOR');
 
 @Injectable({ providedIn: 'root' })
 export class LoginGuard implements CanActivate {
-  constructor(private store: Store) {}
+  constructor(
+    private store: Store,
+    @Inject(CARREGANDO_SELECTOR) private carregandoFn: () => boolean,
+    @Inject(LOGADO_SELECTOR) private logadoFn: () => boolean,
+    @Inject(TELA_LOGIN) private telaLogin: string
+  ) {}
 
-  canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
-    const login = route.url[0].path === 'login';
+  canActivate(_, state: RouterStateSnapshot): boolean | Observable<boolean> {
+    const url = state.url;
+    const telaAtual = this.store.selectSnapshot(NavegacaoState.telaAtual);
 
-    let action;
-
-    if (login) {
-      action = new navegacao.NavegarPara({
-        caminho: 'inicio',
-        limparHistorico: true
-      });
-    } else {
-      action = new navegacao.NavegarPara({
-        caminho: 'login',
-        limparHistorico: true,
-        atualizarUrl: false
-      });
+    if (url !== telaAtual) {
+      return false;
     }
 
+    const login = url === this.telaLogin;
+
+    const action = login
+      ? new navegacao.NavegarParaTelaInicial()
+      : new navegacao.NavegarParaTelaLogin();
+
     return this.store
-      .select(LoginState.carregando)
+      .select(this.carregandoFn)
       .pipe(filter(c => !c))
-      .pipe(switchMap(() => this.store.select(LoginState.logado)))
+      .pipe(switchMap(() => this.store.select(this.logadoFn)))
       .pipe(map(logado => logado !== login))
       .pipe(tap(podeAtivar => !podeAtivar && this.store.dispatch(action)));
   }
