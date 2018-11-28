@@ -22,6 +22,7 @@ export class LoginGuard implements CanActivate {
     const telaAtual = this.store.selectSnapshot(NavegacaoState.telaAtual);
 
     if (url !== telaAtual) {
+      console.log(`canActivate: '${url}' !== '${telaAtual}'`);
       return false;
     }
 

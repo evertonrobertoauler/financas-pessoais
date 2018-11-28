@@ -126,27 +126,22 @@ export const addAndroid16 = series(
   fixAndroidGradleRepository
 );
 
-export const runAndroidRemote =
-  existsSync('cordova/www') && existsSync('cordova/platforms/android')
-    ? series(buildDevR, addCordovaScript, parallel(cordovaRunAndroid, serveDev))
-    : series(clean, buildDevR, addCordovaScript, addAndroid, parallel(cordovaRunAndroid, serveDev));
+export const runAndroidRemote = existsSync('cordova/plugins/cordova-plugin-ionic-webview')
+  ? series(buildDevR, addCordovaScript, parallel(cordovaRunAndroid, serveDev))
+  : series(clean, buildDevR, addCordovaScript, addAndroid, parallel(cordovaRunAndroid, serveDev));
 
-export const runAndroid =
-  existsSync('cordova/www') && existsSync('cordova/platforms/android')
-    ? series(buildDev, addCordovaScript, cordovaRunAndroid)
-    : series(clean, buildDev, addCordovaScript, addAndroid, cordovaRunAndroid);
+export const runAndroid = existsSync('cordova/plugins/cordova-plugin-ionic-webview')
+  ? series(buildDev, addCordovaScript, cordovaRunAndroid)
+  : series(clean, buildDev, addCordovaScript, addAndroid, cordovaRunAndroid);
 
-export const runAndroidProd =
-  existsSync('cordova/www') && existsSync('cordova/platforms/android')
-    ? series(buildProd, addCordovaScript, cordovaRunAndroid)
-    : series(clean, buildProd, addCordovaScript, addAndroid, cordovaRunAndroid);
+export const runAndroidProd = existsSync('cordova/plugins/cordova-plugin-ionic-webview')
+  ? series(buildProd, addCordovaScript, cordovaRunAndroid)
+  : series(clean, buildProd, addCordovaScript, addAndroid, cordovaRunAndroid);
 
-export const runAndroid16 =
-  existsSync('cordova/www') && existsSync('cordova/platforms/android')
-    ? series(buildDev, fixIndexHtml16, cordovaRunAndroid16)
-    : series(clean, buildDev, fixIndexHtml16, addAndroid16, cordovaRunAndroid16);
+export const runAndroid16 = existsSync('cordova/plugins/cordova-plugin-crosswalk-webview')
+  ? series(buildDev, fixIndexHtml16, cordovaRunAndroid16)
+  : series(clean, buildDev, fixIndexHtml16, addAndroid16, cordovaRunAndroid16);
 
-export const runAndroid16Prod =
-  existsSync('cordova/www') && existsSync('cordova/platforms/android')
-    ? series(buildProd, fixIndexHtml16, cordovaRunAndroid16)
-    : series(clean, buildProd, fixIndexHtml16, addAndroid16, cordovaRunAndroid16);
+export const runAndroid16Prod = existsSync('cordova/plugins/cordova-plugin-crosswalk-webview')
+  ? series(buildProd, fixIndexHtml16, cordovaRunAndroid16)
+  : series(clean, buildProd, fixIndexHtml16, addAndroid16, cordovaRunAndroid16);

@@ -62,7 +62,7 @@ export class InicioExtratoComponent implements OnInit, OnDestroy {
   }
 
   editarTransacao(trans: Transacao) {
-    const caminho = `transacao/${trans.id}`;
+    const caminho = `/transacao/${trans.id}`;
     this.store.dispatch(new navegacao.NavegarPara({ caminho }));
   }
 
