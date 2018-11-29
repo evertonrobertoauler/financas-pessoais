@@ -6,26 +6,28 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
-  <ion-list *ngIf="(transacoes$ | async) as transacoes">
-    <ion-item>
-      <ion-label position="stacked">Caixa Financeiro</ion-label>
-      <ion-select interface="popover" [formControl]="filtroCaixaFinanceiro">
-        <ion-select-option value="todos">Todos</ion-select-option>
-        <ion-select-option *ngFor="let caixa of (caixas$ | async)" [value]="caixa.id">
-          {{ caixa.nome }} ({{ caixa.tipo }})
-        </ion-select-option>
-      </ion-select>
-    </ion-item>
-    <ion-item *ngIf="!transacoes.length">
-      <ion-label text-wrap>
-        <h3>Nenhuma transação cadastrada até o momento!</h3>
-        <p>Precione o botão (+) no canto inferior direito para cadastrar.</p>
-      </ion-label>
-    </ion-item>
-
-    <ion-virtual-scroll [items]="transacoes">
-      <ion-item *virtualItem="let transacao" (click)="editarTransacao(transacao)">
+<ion-content>
+  <cdk-virtual-scroll-viewport #scroll itemSize="130" minBufferPx="500" maxBufferPx="1000">
+    <ion-list *ngIf="(transacoes$ | async) as transacoes">
+      <ion-item>
+        <ion-label position="stacked">Caixa Financeiro</ion-label>
+        <ion-select interface="popover" [formControl]="filtroCaixaFinanceiro">
+          <ion-select-option value="todos">Todos</ion-select-option>
+          <ion-select-option *ngFor="let caixa of (caixas$ | async)" [value]="caixa.id">
+            {{ caixa.nome }} ({{ caixa.tipo }})
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item *ngIf="!transacoes.length">
+        <ion-label text-wrap>
+          <h3>Nenhuma transação cadastrada até o momento!</h3>
+          <p>Precione o botão (+) no canto inferior direito para cadastrar.</p>
+        </ion-label>
+      </ion-item>
+      <ion-item
+        *cdkVirtualFor="let transacao of transacoes; trackBy: trackByFn"
+        (click)="editarTransacao(transacao)"
+      >
         <ion-label>
           <div class="data-cadastro">{{ transacao.dataCadastro | formatarData: 'distancia' }}</div>
           <div [ngClass]="transacao.tipo === 'Despesa' ? 'despesa' : 'receita'">
@@ -43,19 +45,12 @@
           <p><b>Descrição:</b> {{ transacao.descricao }}</p>
         </ion-label>
       </ion-item>
-    </ion-virtual-scroll>
-  </ion-list>
-  <ion-infinite-scroll
-    threshold="100px"
-    (ionInfinite)="carregarTransacoesAnteriores($event)"
-    [disabled]="!(possuiTransacoesAnteriores$ | async)"
-  >
-    <ion-infinite-scroll-content
-      loadingSpinner="bubbles"
-      loadingText="Buscando transações anteriores..."
-    >
-    </ion-infinite-scroll-content>
-  </ion-infinite-scroll>
+      <ion-item *ngIf="(carregando$ | async)">
+        <ion-label text-center><ion-spinner name="bubbles"></ion-spinner></ion-label>
+      </ion-item>
+    </ion-list>
+  </cdk-virtual-scroll-viewport>
+  <ng-container *ngIf="(scroll$ | async)"></ng-container>
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button (click)="adicionarOperacao()" color="secondary">
       <ion-icon name="add"></ion-icon>

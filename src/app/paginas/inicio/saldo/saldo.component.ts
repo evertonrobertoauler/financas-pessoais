@@ -24,6 +24,10 @@ export class InicioSaldoComponent implements OnInit {
     this.caixasFinanceiros$ = this.store.select(CaixaFinanceiroState.caixasFinanceiros);
   }
 
+  trackByFn(_, item: CaixaFinanceiro) {
+    return item.id;
+  }
+
   async recalcularSaldoTotal() {
     const acao = new caixaFinanceiro.RecalcularSaldoTotal();
 

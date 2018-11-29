@@ -3,6 +3,7 @@ import * as actions from './caixa-financeiro.actions';
 import { CaixaFinanceiro } from '../interfaces';
 import { CaixaFinanceiroService } from '../servicos';
 import { Ngxs } from './helpers';
+import { LoadingController } from '@ionic/angular';
 
 export const caixaFinanceiro = actions;
 
@@ -47,7 +48,7 @@ export class CaixaFinanceiroState implements NgxsOnInit {
     return createSelector([CaixaFinanceiroState], seletor) as () => CaixaFinanceiro;
   }
 
-  constructor(private caixa: CaixaFinanceiroService) {}
+  constructor(private caixa: CaixaFinanceiroService, private loadingCtrl: LoadingController) {}
 
   ngxsOnInit(ctx: StateContext<CxModel>) {
     this.caixa.obterTodos().subscribe(list => {
@@ -81,11 +82,18 @@ export class CaixaFinanceiroState implements NgxsOnInit {
 
   @Action(actions.RecalcularSaldoTotal)
   async recalcularSaldoTotal() {
+    const loading = await this.loadingCtrl.create({ message: 'Recalculando...' });
+
     try {
+      await loading.present();
       const retorno = await this.caixa.recalcularSaldoTotal().toPromise();
       console.assert(retorno, 'Função recalcularSaldoTotal retornou false!');
     } catch (e) {
       console.error('recalcularSaldoTotal', e);
+    } finally {
+      if (loading) {
+        await loading.dismiss().catch(() => null);
+      }
     }
   }
 }

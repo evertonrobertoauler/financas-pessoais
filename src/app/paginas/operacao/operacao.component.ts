@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { navegacao, NavegacaoState } from '../../ngxs';
-import { Observable } from 'rxjs';
-import { delay, map } from 'rxjs/operators';
+import { Observable, timer } from 'rxjs';
+import { delay, map, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-operacao',
@@ -19,8 +19,8 @@ export class OperacaoComponent implements OnInit {
   ngOnInit() {
     this.nivel = this.store.selectSnapshot(NavegacaoState.historico).size;
 
-    this.tab$ = this.store
-      .select(NavegacaoState.telaAtual)
+    this.tab$ = timer(1000)
+      .pipe(switchMap(() => this.store.select(NavegacaoState.telaAtual)))
       .pipe(delay(300))
       .pipe(map(url => (url.match(/transacao/) ? 'transacao' : 'transferencia')));
   }

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Platform, LoadingController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { Store } from '@ngxs/store';
-import { LoginState, caixaFinanceiro, navegacao } from './ngxs';
+import { LoginState, caixaFinanceiro } from './ngxs';
 import { Observable } from 'rxjs';
 import { tap, filter, switchMap } from 'rxjs/operators';
 
@@ -33,8 +33,6 @@ export class AppComponent implements OnInit {
       .select(LoginState.logado)
       .pipe(filter(l => l))
       .pipe(switchMap(() => this.store.dispatch(new caixaFinanceiro.RecalcularSaldoParcial())));
-
-    this.store.dispatch(new navegacao.NavegarParaTelaInicial());
   }
 
   private async mostrarLoading(carregando: boolean) {

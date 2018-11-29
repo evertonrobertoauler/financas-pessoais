@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouteReuseStrategy } from '@angular/router';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
@@ -36,7 +37,8 @@ import { CARREGANDO_SELECTOR, LOGADO_SELECTOR } from './guardas';
     AngularFireAuthModule,
     AngularFireFunctionsModule,
     NgxsModule.forRoot(STATES),
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ScrollingModule
   ],
   providers: [
     StatusBar,
