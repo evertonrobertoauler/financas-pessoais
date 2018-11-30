@@ -109,23 +109,20 @@ export class NavegacaoState implements NgxsOnInit {
   @Action(navegacao.NavegarPara)
   async navegarPara(ctx: StateContext<NavModel>, action: navegacao.NavegarPara) {
     const { caminho } = action.payload;
+    let { nivel } = action.payload;
 
-    if (ctx.getState().historico.last() !== caminho) {
-      let nivel = action.payload.nivel;
+    if (nivel && nivel < 0) {
+      nivel = ctx.getState().historico.size + nivel;
+    }
 
-      if (action.payload.nivel && action.payload.nivel < 0) {
-        nivel = ctx.getState().historico.size + action.payload.nivel;
-      }
+    let historico = nivel ? ctx.getState().historico.take(nivel - 1) : ctx.getState().historico;
+    historico = historico.push(caminho);
 
-      let historico = nivel ? ctx.getState().historico.take(nivel - 1) : ctx.getState().historico;
-      historico = historico.push(caminho);
+    ctx.patchState({ historico });
 
-      ctx.patchState({ historico });
-
-      if (!(await this.navegarParaCaminho(caminho))) {
-        if (historico.size > 1) {
-          ctx.patchState({ historico: historico.pop() });
-        }
+    if (!(await this.navegarParaCaminho(caminho))) {
+      if (historico.size > 1) {
+        ctx.patchState({ historico: historico.pop() });
       }
     }
   }
