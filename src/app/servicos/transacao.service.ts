@@ -11,7 +11,7 @@ export const FILTRO_TODOS_CAIXAS = 'todos';
 
 export const CAIXA_FILTRO_FN = caixa => (caixa !== FILTRO_TODOS_CAIXAS ? caixa : '');
 
-export const PAGINACAO = 10;
+export const PAGINACAO = 20;
 
 @Injectable({
   providedIn: 'root'
