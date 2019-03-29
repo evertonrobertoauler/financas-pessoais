@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { navegacao, NavegacaoState } from '../../ngxs';
-import { Observable, timer } from 'rxjs';
-import { delay, map, switchMap } from 'rxjs/operators';
+import { Navegacao, NavegacaoState } from '../../ngxs';
 
 @Component({
   selector: 'app-operacao',
@@ -10,25 +8,18 @@ import { delay, map, switchMap } from 'rxjs/operators';
   styleUrls: ['./operacao.component.scss']
 })
 export class OperacaoComponent implements OnInit {
-  public tab$: Observable<'transacao' | 'transferencia'>;
-
   private nivel: number;
 
   constructor(private store: Store) {}
 
   ngOnInit() {
     this.nivel = this.store.selectSnapshot(NavegacaoState.historico).size;
-
-    this.tab$ = timer(1000)
-      .pipe(switchMap(() => this.store.select(NavegacaoState.telaAtual)))
-      .pipe(delay(300))
-      .pipe(map(url => (url.match(/transacao/) ? 'transacao' : 'transferencia')));
   }
 
   async navegarPara(tela: 'transacao' | 'transferencia') {
-    const caminho = `/operacao/(operacao:${tela})`;
+    const caminho = `/operacao/${tela}`;
     const nivel = this.nivel + (tela === 'transacao' ? 0 : 1);
-    const acao = new navegacao.NavegarPara({ caminho, nivel });
+    const acao = new Navegacao.NavegarPara({ caminho, nivel });
     await this.store.dispatch(acao).toPromise();
   }
 }

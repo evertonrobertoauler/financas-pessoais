@@ -2,7 +2,7 @@ import { Directive, Input, OnInit, OnDestroy } from '@angular/core';
 import { FormatarDadosService } from '../../servicos';
 import { Subscription, combineLatest, of } from 'rxjs';
 import { NgControl } from '@angular/forms';
-import { Input as IonInput } from '@ionic/angular';
+import { IonInput } from '@ionic/angular';
 
 @Directive({
   selector: '[appMascara]'

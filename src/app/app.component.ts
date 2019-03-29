@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Platform, LoadingController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { Store } from '@ngxs/store';
-import { LoginState, caixaFinanceiro, navegacao } from './ngxs';
-import { Observable } from 'rxjs';
-import { tap, filter, switchMap } from 'rxjs/operators';
+import { LoginState, caixaFinanceiro, Navegacao } from './ngxs';
+import { Observable, EMPTY } from 'rxjs';
+import { tap, filter, switchMap, first, delay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -34,7 +34,20 @@ export class AppComponent implements OnInit {
       .pipe(filter(l => l))
       .pipe(switchMap(() => this.store.dispatch(new caixaFinanceiro.RecalcularSaldoParcial())));
 
-    this.store.dispatch(new navegacao.NavegarParaTelaInicial());
+    this.store.dispatch(new Navegacao.NavegarParaTelaInicial());
+
+    const logado = await this.store
+      .select(LoginState.carregando)
+      .pipe(switchMap(c => (c ? EMPTY : this.store.select(LoginState.logado))))
+      .pipe(first())
+      .pipe(delay(50))
+      .toPromise();
+
+    if (logado) {
+      await this.store.dispatch(new Navegacao.NavegarParaTelaInicial()).toPromise;
+    } else {
+      await this.store.dispatch(new Navegacao.NavegarParaTelaLogin()).toPromise();
+    }
   }
 
   private async mostrarLoading(carregando: boolean) {

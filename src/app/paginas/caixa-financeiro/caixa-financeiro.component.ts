@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { CamposCaixaFinanceiro, TIPO_CAIXA } from '../../interfaces';
 import { TIPOS_CAIXA } from '../../servicos';
 import { FormularioComponent } from '../../guardas';
 import { ActivatedRoute } from '@angular/router';
 import { first, map, tap, filter, switchMap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
 import { Store } from '@ngxs/store';
-import { CaixaFinanceiroState, caixaFinanceiro, navegacao } from '../../ngxs';
+import { CaixaFinanceiroState, caixaFinanceiro, Navegacao } from '../../ngxs';
 import { AlertController } from '@ionic/angular';
+import { diff } from 'deep-object-diff';
 
 @Component({
   selector: 'app-caixa-financeiro',
@@ -17,13 +17,23 @@ import { AlertController } from '@ionic/angular';
 })
 export class CaixaFinanceiroComponent implements OnInit, FormularioComponent {
   public submit = false;
-  public formulario: FormGroup;
+  public formulario = this.formBuilder.group({
+    id: [],
+    nome: ['', Validators.required],
+    tipo: ['', Validators.required],
+    diaFechamentoFatura: []
+  } as CamposCaixaFinanceiro);
 
   public tipos: TIPO_CAIXA[];
 
   public id: string;
 
-  public cartao$: Observable<boolean>;
+  public cartao$ = this.formulario
+    .get('tipo')
+    .valueChanges.pipe(map((tipo: TIPO_CAIXA) => tipo === 'Cartão Crédito'))
+    .pipe(tap(cartao => this.regrasCartao(cartao)));
+
+  private valorAnterior = this.formulario.getRawValue();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -34,18 +44,6 @@ export class CaixaFinanceiroComponent implements OnInit, FormularioComponent {
 
   async ngOnInit() {
     this.tipos = TIPOS_CAIXA;
-
-    this.formulario = this.formBuilder.group({
-      id: [],
-      nome: ['', Validators.required],
-      tipo: ['', Validators.required],
-      diaFechamentoFatura: []
-    } as CamposCaixaFinanceiro);
-
-    this.cartao$ = this.formulario
-      .get('tipo')
-      .valueChanges.pipe(map((tipo: TIPO_CAIXA) => tipo === 'Cartão Crédito'))
-      .pipe(tap(cartao => this.regrasCartao(cartao)));
 
     const caixa = await this.route.params
       .pipe(filter(p => p && p.id))
@@ -62,12 +60,23 @@ export class CaixaFinanceiroComponent implements OnInit, FormularioComponent {
       this.formulario.get('tipo').disable();
       this.formulario.get('diaFechamentoFatura').disable();
     }
+
+    this.valorAnterior = this.formulario.getRawValue();
+  }
+
+  mudanca() {
+    return Object.keys(diff(this.valorAnterior, this.formulario.getRawValue())).length > 0;
   }
 
   salvar() {
     if (this.formulario.valid) {
       this.submit = true;
-      this.store.dispatch(new caixaFinanceiro.SalvarCaixaFinanceiro(this.formulario.value));
+
+      if (this.mudanca()) {
+        const acao = new caixaFinanceiro.SalvarCaixaFinanceiro(this.formulario.getRawValue());
+        this.store.dispatch(acao);
+      }
+
       this.voltar();
     }
   }
@@ -89,7 +98,7 @@ export class CaixaFinanceiroComponent implements OnInit, FormularioComponent {
   }
 
   voltar() {
-    this.store.dispatch(new navegacao.VoltarParaTelaAnterior());
+    this.store.dispatch(new Navegacao.VoltarParaTelaAnterior());
   }
 
   private regrasCartao(cartao: boolean) {

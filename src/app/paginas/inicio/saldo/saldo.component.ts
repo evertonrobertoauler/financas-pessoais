@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { CaixaFinanceiroState, navegacao, transacao, caixaFinanceiro } from '../../../ngxs';
+import { CaixaFinanceiroState, Navegacao, transacao, caixaFinanceiro } from '../../../ngxs';
 import { CaixaFinanceiro } from '../../../interfaces';
 import { FILTRO_TODOS_CAIXAS } from '../../../servicos';
 import { AlertController } from '@ionic/angular';
@@ -43,21 +43,21 @@ export class InicioSaldoComponent implements OnInit {
 
   editarCaixa(caixa: CaixaFinanceiro) {
     const caminho = `/caixa-financeiro/${caixa.id}`;
-    this.store.dispatch(new navegacao.NavegarPara({ caminho }));
+    this.store.dispatch(new Navegacao.NavegarPara({ caminho }));
   }
 
   adicionarCaixa() {
-    this.store.dispatch(new navegacao.NavegarPara({ caminho: '/caixa-financeiro' }));
+    this.store.dispatch(new Navegacao.NavegarPara({ caminho: '/caixa-financeiro' }));
   }
 
   adicionarOperacao() {
     this.store.dispatch(new transacao.FiltrarPorCaixa({ filtroCaixa: FILTRO_TODOS_CAIXAS }));
-    this.store.dispatch(new navegacao.NavegarPara({ caminho: '/operacao/(operacao:transacao)' }));
+    this.store.dispatch(new Navegacao.NavegarPara({ caminho: '/operacao/transacao' }));
   }
 
   abrirExtrato(caixa: CaixaFinanceiro) {
     this.store.dispatch(new transacao.FiltrarPorCaixa({ filtroCaixa: caixa.id }));
-    this.store.dispatch(new navegacao.NavegarPara({ caminho: '/inicio/(tela:extrato)' }));
+    this.store.dispatch(new Navegacao.NavegarPara({ caminho: '/inicio/extrato' }));
   }
 
   calcularSaldoFuturo(caixa: CaixaFinanceiro) {

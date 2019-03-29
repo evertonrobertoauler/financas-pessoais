@@ -1,34 +1,24 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { Observable, merge, Subscription, EMPTY } from 'rxjs';
+import { Observable, merge, Subscription } from 'rxjs';
 import { Transacao, CaixaFinanceiro } from '../../../interfaces';
-import { TransacaoState, CaixaFinanceiroState, navegacao, transacao } from '../../../ngxs';
-import { map, mapTo, debounceTime, switchMap, scan } from 'rxjs/operators';
+import { TransacaoState, CaixaFinanceiroState, Navegacao, transacao } from '../../../ngxs';
+import { map, mapTo } from 'rxjs/operators';
 import { FormControl, FormBuilder } from '@angular/forms';
-import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-inicio-extrato',
   templateUrl: './extrato.component.html',
   styleUrls: ['./extrato.component.scss']
 })
-export class InicioExtratoComponent implements OnInit, AfterViewInit, OnDestroy {
+export class InicioExtratoComponent implements OnInit, OnDestroy {
   public transacoes$: Observable<Transacao[]>;
   public caixas$: Observable<CaixaFinanceiro[]>;
   public filtroCaixaFinanceiro: FormControl;
   public filtroChange: Subscription;
   public possuiTransacoesAnteriores$: Observable<boolean>;
-  public scroll$: Observable<any>;
-  public carregando$: Observable<any>;
 
-  @ViewChild('scroll') scroll: CdkVirtualScrollViewport;
-
-  constructor(
-    private store: Store,
-    private formBuilder: FormBuilder,
-    private loadingCtrl: LoadingController
-  ) {}
+  constructor(private store: Store, private formBuilder: FormBuilder) {}
 
   ngOnInit() {
     const caixaFinanceiro = id => this.store.select(CaixaFinanceiroState.caixaFinanceiro(id));
@@ -41,24 +31,6 @@ export class InicioExtratoComponent implements OnInit, AfterViewInit, OnDestroy 
     this.transacoes$ = this.store
       .select(TransacaoState.transacoes)
       .pipe(map(list => list.map(t => transacaoFn(t))));
-
-    const loading = () =>
-      this.loadingCtrl.create({ message: 'Carregando...' }).then(l => l.present());
-
-    this.carregando$ = this.store.select(TransacaoState.carregando).pipe(
-      scan<boolean, any>(
-        (obj, carregando) => {
-          if (carregando && !obj.open) {
-            return { open: true, promise: obj.promise.then(_ => loading()) };
-          } else if (!carregando && obj.open) {
-            return { open: false, promise: obj.promise.then(_ => this.loadingCtrl.dismiss()) };
-          } else {
-            return obj;
-          }
-        },
-        { open: false, promise: Promise.resolve() }
-      )
-    );
 
     this.caixas$ = this.store.select(CaixaFinanceiroState.caixasFinanceiros);
 
@@ -83,13 +55,6 @@ export class InicioExtratoComponent implements OnInit, AfterViewInit, OnDestroy 
     });
   }
 
-  ngAfterViewInit() {
-    this.scroll$ = this.scroll.scrolledIndexChange
-      .pipe(debounceTime(500))
-      .pipe(map(_ => this.scroll.measureScrollOffset('bottom')))
-      .pipe(switchMap(pb => (pb < 300 ? this.carregarTransacoesAnteriores() : EMPTY)));
-  }
-
   ngOnDestroy() {
     if (this.filtroChange instanceof Subscription) {
       this.filtroChange.unsubscribe();
@@ -102,15 +67,16 @@ export class InicioExtratoComponent implements OnInit, AfterViewInit, OnDestroy 
 
   editarTransacao(trans: Transacao) {
     const caminho = `/transacao/${trans.id}`;
-    this.store.dispatch(new navegacao.NavegarPara({ caminho }));
+    this.store.dispatch(new Navegacao.NavegarPara({ caminho }));
   }
 
   adicionarOperacao() {
-    const caminho = '/operacao/(operacao:transacao)';
-    this.store.dispatch(new navegacao.NavegarPara({ caminho }));
+    const caminho = '/operacao/transacao';
+    this.store.dispatch(new Navegacao.NavegarPara({ caminho }));
   }
 
-  async carregarTransacoesAnteriores() {
+  async carregarTransacoesAnteriores($event) {
     await this.store.dispatch(new transacao.CarregarMaisTransacoes()).toPromise();
+    $event.target.complete();
   }
 }

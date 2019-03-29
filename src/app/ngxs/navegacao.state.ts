@@ -7,7 +7,7 @@ import { Ngxs } from './helpers';
 export const TELA_LOGIN = new InjectionToken<string>('TELA_LOGIN');
 export const TELA_INICIAL = new InjectionToken<string>('TELA_INICIAL');
 
-export namespace navegacao {
+export namespace Navegacao {
   export class NavegarPara {
     static readonly type = '[Lib/Navegação] Navegar para]';
     constructor(
@@ -99,17 +99,22 @@ export class NavegacaoState implements NgxsOnInit {
           if (historico.size === 1) {
             (window as any).navigator.app.exitApp();
           } else if (historico.size > 1) {
-            ctx.dispatch(new navegacao.VoltarParaTelaAnterior());
+            ctx.dispatch(new Navegacao.VoltarParaTelaAnterior());
           }
         }
       });
     }
   }
 
-  @Action(navegacao.NavegarPara)
-  async navegarPara(ctx: StateContext<NavModel>, action: navegacao.NavegarPara) {
+  @Action(Navegacao.NavegarPara)
+  async navegarPara(ctx: StateContext<NavModel>, action: Navegacao.NavegarPara) {
     const { caminho } = action.payload;
     let { nivel } = action.payload;
+
+    if (ctx.getState().historico.last() === caminho) {
+      console.warn(`${ctx.getState().historico.last()} === ${caminho}`);
+      return null;
+    }
 
     if (nivel && nivel < 0) {
       nivel = ctx.getState().historico.size + nivel;
@@ -127,27 +132,26 @@ export class NavegacaoState implements NgxsOnInit {
     }
   }
 
-  @Action(navegacao.NavegarParaTelaLogin)
+  @Action(Navegacao.NavegarParaTelaLogin)
   async navegarParaTelaLogin(ctx: StateContext<NavModel>) {
     ctx.dispatch(
-      new navegacao.NavegarPara({
+      new Navegacao.NavegarPara({
         caminho: ctx.getState().telaLogin,
         nivel: 1
       })
     );
   }
 
-  @Action(navegacao.NavegarParaTelaInicial)
+  @Action(Navegacao.NavegarParaTelaInicial)
   async navegarParaTelaInicial(ctx: StateContext<NavModel>) {
     ctx.dispatch(
-      new navegacao.NavegarPara({
+      new Navegacao.NavegarPara({
         caminho: ctx.getState().telaInicial,
         nivel: 1
       })
     );
   }
-
-  @Action(navegacao.VoltarParaTelaAnterior)
+  @Action(Navegacao.VoltarParaTelaAnterior)
   async voltarParaTelaAnterior(ctx: StateContext<NavModel>) {
     const historicoAtual = ctx.getState().historico;
     const historicoNovo = ctx.getState().historico.pop();
@@ -155,18 +159,21 @@ export class NavegacaoState implements NgxsOnInit {
     if (historicoNovo.size) {
       ctx.patchState({ historico: historicoNovo });
 
-      if (!(await this.navegarParaCaminho(historicoNovo.last()))) {
+      const url: string = historicoNovo.last();
+
+      if (!(await this.navegarParaCaminho(url)) && this.router.url !== url) {
+        console.warn('voltarParaTelaAnterior', this.router.url, historicoAtual.toArray());
         ctx.patchState({ historico: historicoAtual });
       }
     }
   }
 
-  @Action(navegacao.ModalAdicionado)
+  @Action(Navegacao.ModalAdicionado)
   async modalAdicionado(ctx: StateContext<NavModel>) {
     ctx.patchState({ modais: ctx.getState().modais + 1 });
   }
 
-  @Action(navegacao.ModalRemovido)
+  @Action(Navegacao.ModalRemovido)
   async modalRemovido(ctx: StateContext<NavModel>) {
     ctx.patchState({ modais: ctx.getState().modais - 1 });
   }

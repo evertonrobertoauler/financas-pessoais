@@ -1,25 +1,30 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Store } from '@ngxs/store';
-import { Observable, merge } from 'rxjs';
 import { FormularioComponent } from '../../../guardas';
-import { CaixaFinanceiro, CamposTransferencia } from '../../../interfaces';
+import { CamposTransferencia } from '../../../interfaces';
 import { FormatarDadosService } from '../../../servicos';
-import { CaixaFinanceiroState, transacao, navegacao, TransacaoState } from '../../../ngxs';
-import { tap } from 'rxjs/operators';
+import { CaixaFinanceiroState, transacao, Navegacao, TransacaoState } from '../../../ngxs';
+import { diff } from 'deep-object-diff';
 
 @Component({
   selector: 'app-operacao-transferencia',
   templateUrl: './transferencia.component.html',
   styleUrls: ['./transferencia.component.scss']
 })
-export class OperacaoTransferenciaComponent implements OnInit, FormularioComponent {
-  public formulario: FormGroup;
-  public submit = false;
+export class OperacaoTransferenciaComponent implements FormularioComponent {
+  public formulario = this.formBuilder.group({
+    caixaOrigem: [this.store.selectSnapshot(TransacaoState.caixaSelecionado), Validators.required],
+    caixaDestino: ['', Validators.required],
+    descricao: ['', [Validators.required]],
+    valor: ['', [Validators.required]],
+    dataTransacao: [this.formatarDados.formatarData(new Date(), 'YYYY-MM-DD'), Validators.required]
+  } as CamposTransferencia);
 
-  public caixas$: Observable<CaixaFinanceiro[]>;
-  public descricao$: Observable<any>;
-  public caixaSelecionado$: Observable<any>;
+  public submit = false;
+  private valorAnterior = this.formulario.getRawValue();
+
+  public caixas$ = this.store.select(CaixaFinanceiroState.caixasFinanceiros);
 
   constructor(
     private formBuilder: FormBuilder,
@@ -27,39 +32,8 @@ export class OperacaoTransferenciaComponent implements OnInit, FormularioCompone
     private formatarDados: FormatarDadosService
   ) {}
 
-  async ngOnInit() {
-    const dataAtual = this.formatarDados.formatarData(new Date(), 'YYYY-MM-DD');
-
-    this.formulario = this.formBuilder.group({
-      caixaOrigem: ['', Validators.required],
-      caixaDestino: ['', Validators.required],
-      descricao: ['', [Validators.required]],
-      valor: ['', [Validators.required]],
-      dataTransacao: [dataAtual, Validators.required]
-    } as CamposTransferencia);
-
-    this.caixas$ = this.store.select(CaixaFinanceiroState.caixasFinanceiros);
-
-    const origem = this.formulario.get('caixaOrigem');
-    const destino = this.formulario.get('caixaDestino');
-    const descricao = this.formulario.get('descricao');
-
-    this.caixaSelecionado$ = this.store
-      .select(TransacaoState.caixaSelecionado)
-      .pipe(tap(cx => origem.setValue(cx)));
-
-    const fnCaixa = id => {
-      const caixa = this.store.selectSnapshot(CaixaFinanceiroState.caixaFinanceiro(id));
-      return `${caixa.nome} (${caixa.tipo})`;
-    };
-
-    this.descricao$ = merge(origem.valueChanges, destino.valueChanges).pipe(
-      tap(() => {
-        if (origem.value && destino.value) {
-          descricao.setValue(`${fnCaixa(origem.value)} -> ${fnCaixa(destino.value)}`);
-        }
-      })
-    );
+  mudanca() {
+    return Object.keys(diff(this.valorAnterior, this.formulario.getRawValue())).length > 0;
   }
 
   salvar() {
@@ -71,7 +45,7 @@ export class OperacaoTransferenciaComponent implements OnInit, FormularioCompone
   }
 
   voltar() {
-    const caminho = '/inicio/(tela:extrato)';
-    this.store.dispatch(new navegacao.NavegarPara({ caminho, nivel: 2 }));
+    const caminho = '/inicio/extrato';
+    this.store.dispatch(new Navegacao.NavegarPara({ caminho, nivel: 2 }));
   }
 }

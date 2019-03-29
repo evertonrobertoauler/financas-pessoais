@@ -1,7 +1,7 @@
 import { State, NgxsOnInit, StateContext, Action, Selector } from '@ngxs/store';
 import { FirebaseService, UsuarioService } from '../servicos';
 import { Usuario } from '../interfaces';
-import { navegacao } from './navegacao.state';
+import { Navegacao } from './navegacao.state';
 
 export namespace login {
   export class LogarComGoogle {
@@ -53,7 +53,7 @@ export class LoginState implements NgxsOnInit {
       const user = await this.firebase.loginComGoogle();
       const usuario = await this.usuario.salvar(user);
       ctx.patchState({ usuario, carregando: false });
-      ctx.dispatch(new navegacao.NavegarParaTelaInicial());
+      ctx.dispatch(new Navegacao.NavegarParaTelaInicial());
     } catch {
       ctx.patchState({ usuario: null, carregando: false });
     }

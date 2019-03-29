@@ -2,7 +2,7 @@ import { Directive, AfterViewInit, OnDestroy } from '@angular/core';
 import { Optional, ElementRef, Renderer2 } from '@angular/core';
 import { NgControl, FormControlName } from '@angular/forms';
 import { Subscription, merge, fromEvent } from 'rxjs';
-import { debounceTime, switchMap, filter } from 'rxjs/operators';
+import { debounceTime, filter, first } from 'rxjs/operators';
 import { FormularioDirective } from './formulario.directive';
 
 @Directive({
@@ -25,25 +25,25 @@ export class CampoFormularioDirective implements AfterViewInit, OnDestroy {
     @Optional() private ngControl: NgControl
   ) {}
 
-  ngAfterViewInit() {
+  async ngAfterViewInit() {
     this.campo = this.el.nativeElement;
-
-    this.formulario.registrarCampo(this.campo);
 
     if (this.ngControl instanceof FormControlName) {
       this.criarDivErro();
 
       if (this.campo.nodeName.toLowerCase() === 'ion-input') {
-        this.fecharTeclado = fromEvent(this.el.nativeElement, 'ionInputDidLoad')
-          .pipe(
-            switchMap(() => {
-              const nodes = Array.from(this.el.nativeElement.shadowRoot.childNodes);
-              const input = nodes.find((n: any) => n.nodeName === 'INPUT') as any;
-              return fromEvent(input, 'keydown').pipe(filter((e: any) => e.keyCode === 13));
-            })
-          )
+        await fromEvent(this.campo, 'ionInputDidLoad')
+          .pipe(first())
+          .toPromise();
+
+        this.campo = this.campo.querySelector('input');
+
+        this.fecharTeclado = fromEvent(this.campo, 'keydown')
+          .pipe(filter((e: any) => [9, 13].indexOf(e.keyCode) !== -1))
           .subscribe(() => this.formulario.irParaProximoCampo(this.campo));
       }
+
+      this.formulario.registrarCampo(this.campo);
 
       const mudancas$ = merge(
         fromEvent(this.campo, 'blur').pipe(debounceTime(700)),
@@ -64,6 +64,8 @@ export class CampoFormularioDirective implements AfterViewInit, OnDestroy {
           this.removerErro();
         }
       });
+    } else {
+      this.formulario.registrarCampo(this.campo);
     }
   }
 

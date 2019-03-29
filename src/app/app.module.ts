@@ -1,11 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouteReuseStrategy } from '@angular/router';
-import { ScrollingModule } from '@angular/cdk/scrolling';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
-import { AngularFirestoreModule, FirestoreSettingsToken, Settings } from '@angular/fire/firestore';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireFunctionsModule, FunctionsRegionToken } from '@angular/fire/functions';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
@@ -31,23 +30,18 @@ import { CARREGANDO_SELECTOR, LOGADO_SELECTOR } from './guardas';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    IonicModule.forRoot(),
+    IonicModule.forRoot({ backButtonText: 'Voltar' }),
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule.enablePersistence(),
     AngularFireAuthModule,
     AngularFireFunctionsModule,
-    NgxsModule.forRoot(STATES),
-    ReactiveFormsModule,
-    ScrollingModule
+    NgxsModule.forRoot(STATES, { developmentMode: !environment.production }),
+    ReactiveFormsModule
   ],
   providers: [
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    {
-      provide: FirestoreSettingsToken,
-      useValue: { timestampsInSnapshots: true } as Settings
-    },
     { provide: FunctionsRegionToken, useValue: 'us-central1' },
     { provide: CARREGANDO_SELECTOR, useValue: LoginState.carregando },
     { provide: LOGADO_SELECTOR, useValue: LoginState.logado }

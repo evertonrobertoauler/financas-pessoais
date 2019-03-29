@@ -1,15 +1,24 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, RouteReuseStrategy } from '@angular/router';
 import { Paginas } from './paginas';
-import { GUARDAS, FormulariosGuard, LoginGuard } from './guardas';
+import { GUARDAS, FormulariosGuard, NavegacaoGuard } from './guardas';
 import { IonicRouteStrategy } from '@ionic/angular';
 import { TELA_LOGIN, TELA_INICIAL } from './ngxs';
+
+const canActivate = [NavegacaoGuard];
+const canDeactivate = [NavegacaoGuard];
+const canDeactivateForm = [NavegacaoGuard, FormulariosGuard];
+
+const logado = { logado: true };
+const deslogado = { logado: false };
 
 const routes: Routes = [
   {
     path: 'login',
     component: Paginas.LoginComponent,
-    canActivate: [LoginGuard]
+    data: deslogado,
+    canActivate,
+    canDeactivate
   },
   {
     path: 'inicio',
@@ -17,19 +26,21 @@ const routes: Routes = [
     children: [
       {
         path: 'saldo',
-        outlet: 'tela',
         component: Paginas.InicioSaldoComponent,
-        canActivate: [LoginGuard]
+        data: logado,
+        canActivate,
+        canDeactivate
       },
       {
         path: 'extrato',
-        outlet: 'tela',
         component: Paginas.InicioExtratoComponent,
-        canActivate: [LoginGuard]
+        data: logado,
+        canActivate,
+        canDeactivate
       },
       {
         path: '**',
-        redirectTo: '/inicio/(tela:saldo)',
+        redirectTo: '/inicio/saldo',
         pathMatch: 'full'
       }
     ]
@@ -37,14 +48,16 @@ const routes: Routes = [
   {
     path: 'caixa-financeiro',
     component: Paginas.CaixaFinanceiroComponent,
-    canActivate: [LoginGuard],
-    canDeactivate: [FormulariosGuard]
+    data: logado,
+    canActivate,
+    canDeactivate: canDeactivateForm
   },
   {
     path: 'caixa-financeiro/:id',
     component: Paginas.CaixaFinanceiroComponent,
-    canActivate: [LoginGuard],
-    canDeactivate: [FormulariosGuard]
+    data: logado,
+    canActivate,
+    canDeactivate: canDeactivateForm
   },
   {
     path: 'operacao',
@@ -52,21 +65,21 @@ const routes: Routes = [
     children: [
       {
         path: 'transacao',
-        outlet: 'operacao',
         component: Paginas.OperacaoTransacaoComponent,
-        canActivate: [LoginGuard],
-        canDeactivate: [FormulariosGuard]
+        data: logado,
+        canActivate,
+        canDeactivate: canDeactivateForm
       },
       {
         path: 'transferencia',
-        outlet: 'operacao',
         component: Paginas.OperacaoTransferenciaComponent,
-        canActivate: [LoginGuard],
-        canDeactivate: [FormulariosGuard]
+        data: logado,
+        canActivate,
+        canDeactivate: canDeactivateForm
       },
       {
         path: '**',
-        redirectTo: '/operacao/(operacao:transacao)',
+        redirectTo: '/operacao/transacao',
         pathMatch: 'full'
       }
     ]
@@ -74,12 +87,13 @@ const routes: Routes = [
   {
     path: 'transacao/:id',
     component: Paginas.OperacaoTransacaoComponent,
-    canActivate: [LoginGuard],
-    canDeactivate: [FormulariosGuard]
+    data: logado,
+    canActivate,
+    canDeactivate: canDeactivateForm
   },
   {
     path: '**',
-    redirectTo: '/inicio/(tela:saldo)',
+    redirectTo: '/inicio/saldo',
     pathMatch: 'full'
   }
 ];
@@ -90,7 +104,7 @@ const routes: Routes = [
     ...GUARDAS,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: TELA_LOGIN, useValue: '/login' },
-    { provide: TELA_INICIAL, useValue: '/inicio/(tela:saldo)' }
+    { provide: TELA_INICIAL, useValue: '/inicio/saldo' }
   ],
   exports: [RouterModule]
 })

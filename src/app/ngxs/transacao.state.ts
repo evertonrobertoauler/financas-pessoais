@@ -51,7 +51,7 @@ export class TransacaoState implements NgxsOnInit {
     return state.carregando;
   }
 
-  static transacao(id: string): () => Transacao {
+  static transacao(id: string) {
     const seletor = (state: TrModel) => state.transacoes.entidades.get(id);
     return createSelector(
       [TransacaoState],
@@ -62,7 +62,7 @@ export class TransacaoState implements NgxsOnInit {
   constructor(private service: TransacaoService) {}
 
   ngxsOnInit(ctx: StateContext<TrModel>) {
-    const fn = list =>
+    const fn = (list: Transacao[]) =>
       ctx.patchState({ transacoes: Ngxs.popularEntidade(list, 'id'), carregando: false });
 
     this.filtro = this.service.obterTodos(ctx.getState().filtroCaixa).subscribe(fn);
@@ -95,7 +95,7 @@ export class TransacaoState implements NgxsOnInit {
       this.filtro.unsubscribe();
     }
 
-    const fn = list =>
+    const fn = (list: Transacao[]) =>
       ctx.patchState({ transacoes: Ngxs.popularEntidade(list, 'id'), carregando: false });
 
     this.filtro = this.service.obterTodos(filtroCaixa).subscribe(fn);
@@ -115,7 +115,7 @@ export class TransacaoState implements NgxsOnInit {
 
     if (size === limit && size % PAGINACAO === 0) {
       return await new Promise(resolve => {
-        const fn = list => {
+        const fn = (list: Transacao[]) => {
           resolve();
           ctx.patchState({ transacoes: Ngxs.popularEntidade(list, 'id'), carregando: false });
         };

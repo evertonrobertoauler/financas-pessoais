@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { NavegacaoState, navegacao } from '../../ngxs';
+import { NavegacaoState, Navegacao } from '../../ngxs';
 
 @Component({
   selector: 'app-voltar',
@@ -22,6 +22,6 @@ export class VoltarComponent implements OnInit {
   }
 
   voltar() {
-    this.store.dispatch(new navegacao.VoltarParaTelaAnterior());
+    this.store.dispatch(new Navegacao.VoltarParaTelaAnterior());
   }
 }
