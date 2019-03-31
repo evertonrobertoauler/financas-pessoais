@@ -3,6 +3,7 @@ import { State, NgxsOnInit, Selector, StateContext, Action } from '@ngxs/store';
 import { Router } from '@angular/router';
 import { Platform } from '@ionic/angular';
 import { Ngxs } from './helpers';
+import { timer } from 'rxjs';
 
 export const TELA_LOGIN = new InjectionToken<string>('TELA_LOGIN');
 export const TELA_INICIAL = new InjectionToken<string>('TELA_INICIAL');
@@ -88,7 +89,7 @@ export class NavegacaoState implements NgxsOnInit {
     ctx.patchState({
       telaLogin: this.telaLogin,
       telaInicial: this.telaInicial,
-      historico: Ngxs.popularLista([this.telaInicial])
+      historico: Ngxs.popularLista([])
     });
 
     if (this.platform.is('cordova') && this.platform.is('android')) {
@@ -108,11 +109,13 @@ export class NavegacaoState implements NgxsOnInit {
 
   @Action(Navegacao.NavegarPara)
   async navegarPara(ctx: StateContext<NavModel>, action: Navegacao.NavegarPara) {
+    await timer(100).toPromise();
+
     const { caminho } = action.payload;
     let { nivel } = action.payload;
 
     if (ctx.getState().historico.last() === caminho) {
-      console.warn(`${ctx.getState().historico.last()} === ${caminho}`);
+      console.warn(`navegarPara ${ctx.getState().historico.last()} === ${caminho}`);
       return null;
     }
 

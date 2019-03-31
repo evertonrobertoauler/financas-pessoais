@@ -25,6 +25,11 @@ import { NgxsModule } from '@ngxs/store';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CARREGANDO_SELECTOR, LOGADO_SELECTOR } from './guardas';
 
+if (window.location.hash) {
+  console.log('#### HASH ####', window.location.hash);
+  window.location.hash = '';
+}
+
 @NgModule({
   declarations: [AppComponent, ...PAGINAS, ...COMPONENTES, ...DIRETIVAS, ...PIPES],
   imports: [

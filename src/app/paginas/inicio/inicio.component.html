@@ -5,7 +5,12 @@
       <ion-label>Saldo</ion-label>
     </ion-tab-button>
     <ion-avatar *ngIf="(usuario$ | async) as usuario"><img [src]="usuario.foto"/></ion-avatar>
-    <ion-tab-button tab="extrato" (click)="abrir('extrato')" [disabled]="!(possuiCaixa$ | async)">
+    <ion-tab-button
+      href=""
+      tab="extrato"
+      (click)="abrir('extrato')"
+      [disabled]="!(possuiCaixa$ | async)"
+    >
       <ion-icon name="list-box"></ion-icon>
       <ion-label>Extrato</ion-label>
     </ion-tab-button>

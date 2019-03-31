@@ -34,8 +34,6 @@ export class AppComponent implements OnInit {
       .pipe(filter(l => l))
       .pipe(switchMap(() => this.store.dispatch(new caixaFinanceiro.RecalcularSaldoParcial())));
 
-    this.store.dispatch(new Navegacao.NavegarParaTelaInicial());
-
     const logado = await this.store
       .select(LoginState.carregando)
       .pipe(switchMap(c => (c ? EMPTY : this.store.select(LoginState.logado))))
@@ -44,7 +42,7 @@ export class AppComponent implements OnInit {
       .toPromise();
 
     if (logado) {
-      await this.store.dispatch(new Navegacao.NavegarParaTelaInicial()).toPromise;
+      await this.store.dispatch(new Navegacao.NavegarParaTelaInicial()).toPromise();
     } else {
       await this.store.dispatch(new Navegacao.NavegarParaTelaLogin()).toPromise();
     }

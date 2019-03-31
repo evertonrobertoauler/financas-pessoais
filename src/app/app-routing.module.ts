@@ -37,11 +37,6 @@ const routes: Routes = [
         data: logado,
         canActivate,
         canDeactivate
-      },
-      {
-        path: '**',
-        redirectTo: '/inicio/saldo',
-        pathMatch: 'full'
       }
     ]
   },
@@ -76,11 +71,6 @@ const routes: Routes = [
         data: logado,
         canActivate,
         canDeactivate: canDeactivateForm
-      },
-      {
-        path: '**',
-        redirectTo: '/operacao/transacao',
-        pathMatch: 'full'
       }
     ]
   },
@@ -90,11 +80,6 @@ const routes: Routes = [
     data: logado,
     canActivate,
     canDeactivate: canDeactivateForm
-  },
-  {
-    path: '**',
-    redirectTo: '/inicio/saldo',
-    pathMatch: 'full'
   }
 ];
 
