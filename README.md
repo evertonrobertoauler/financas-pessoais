@@ -37,8 +37,11 @@ Na raíz do projeto crie uma pasta 'config' contendo 2 arquivos:
 
 - config/google-services.json
 
+      // Faça o download deste arquivo no Painel do Firebase em geral, adicionar app para Android
 
-      // Faça o download deste arquivo no Painel do Firebase ao adicionar a plataforma Android
+- config/admin.json
+
+      // Faça o download deste arquivo no Painel do Firebase em Contas de serviço em Gerar nova chave privada
 
 # Desenvolver no Browser
 
