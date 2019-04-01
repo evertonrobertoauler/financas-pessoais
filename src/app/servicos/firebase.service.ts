@@ -23,6 +23,10 @@ export class FirebaseService {
   }
 
   async obterUsuarioLogin() {
+    if (!this.auth.auth.currentUser && (window as any).Cypress) {
+      await this.auth.auth.signInWithCustomToken((window as any).Cypress.env('TOKEN'));
+    }
+
     return await this.auth.user.pipe(first()).toPromise();
   }
 
