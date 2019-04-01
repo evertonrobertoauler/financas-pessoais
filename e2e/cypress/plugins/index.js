@@ -10,8 +10,7 @@
 
 const wp = require('@cypress/webpack-preprocessor');
 
-const admin = require('firebase-admin');
-const serviceAccount = require('../../../config/admin.json');
+const firebase = require('../../firebase.json');
 
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
@@ -21,11 +20,6 @@ module.exports = (on, config) => {
   // `config` is the resolved Cypress config
   on('file:preprocessor', wp({ webpackOptions: require('../../webpack.config') }));
 
-  admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
-  const auth = admin.auth();
-
-  return auth.createCustomToken('iWpmnti9o3dXCG0BUT9nLPf2Zko1').then(token => {
-    config.env.TOKEN = token;
-    return config;
-  });
+  config.env.TOKEN = firebase.token;
+  return config;
 };

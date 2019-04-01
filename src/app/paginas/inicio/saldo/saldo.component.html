@@ -28,7 +28,7 @@
         <p>Precione o botão abaxo para cadastrar.</p>
       </ion-label>
     </ion-item>
-    <ion-item *ngFor="let caixa of caixasFinanceiros; trackBy: trackByFn">
+    <ion-item *ngFor="let caixa of caixasFinanceiros; trackBy: trackByFn" class="item-caixa">
       <ion-label (click)="abrirExtrato(caixa)">
         <h2>
           <b>{{ caixa.nome }}</b> ({{ caixa.tipo }})
