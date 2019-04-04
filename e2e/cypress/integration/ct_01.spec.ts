@@ -1,6 +1,9 @@
 context('CT_01', () => {
   before(() => {
-    cy.exec('gulp limparFirestore').visit('http://localhost:4200');
+    cy.wait(3000)
+      .exec('gulp limparFirestore')
+      .visit('http://localhost:4200')
+      .wait(3000);
   });
 
   it('1. Inserir um caixa financeiro', () => {
@@ -67,7 +70,9 @@ context('CT_01', () => {
 
     cy.wait(1000);
     cy.get('app-caixa-financeiro ion-header ion-title').should('contain', 'Caixa Financeiro');
-    cy.get('app-caixa-financeiro [formControlName="nome"] input').clear().type('Mastercard Bradesco');
+    cy.get('app-caixa-financeiro [formControlName="nome"] input')
+      .clear()
+      .type('Mastercard Bradesco');
 
     cy.get('app-caixa-financeiro ion-button[type="submit"]')
       .should('contain', 'Salvar')
@@ -91,12 +96,27 @@ context('CT_01', () => {
 
     cy.wait(200);
 
-    cy.get('ion-alert button').last()
+    cy.get('ion-alert button')
+      .last()
       .should('have.text', 'Sim')
       .click();
 
-    cy.wait(200);
+    cy.wait(1000);
 
+    cy.get('app-inicio .item-caixa').should('have.length', 1);
+  });
+
+  it('5. Nenhuma alteração realizada', () => {
+    cy.get('app-inicio ion-header ion-title').should('have.text', 'Saldo');
+    cy.get('app-inicio ion-content .item-caixa:eq(0) ion-button')
+      .first()
+      .click();
+
+    cy.wait(1000);
+    cy.get('app-caixa-financeiro ion-header ion-title').should('contain', 'Caixa Financeiro');
+    cy.get('app-caixa-financeiro ion-buttons[slot="start"] ion-button').click();
+
+    cy.wait(1000);
     cy.get('app-inicio .item-caixa').should('have.length', 1);
   });
 });
