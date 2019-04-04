@@ -54,3 +54,11 @@ Na raíz do projeto crie uma pasta 'config' contendo 2 arquivos:
 # Instalar o Aplicativo no Android
 
     gulp runAndroidProd
+
+# Instalar dependências testes
+
+    cd e2e; npm install
+
+# Rodar os testes
+
+    npm run e2e
