@@ -101,7 +101,7 @@ context('CT_01', () => {
       .should('have.text', 'Sim')
       .click();
 
-    cy.wait(1000);
+    cy.wait(2000);
 
     cy.get('app-inicio .item-caixa').should('have.length', 1);
   });
