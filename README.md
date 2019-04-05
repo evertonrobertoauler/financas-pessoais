@@ -55,10 +55,14 @@ Na raíz do projeto crie uma pasta 'config' contendo 2 arquivos:
 
     gulp runAndroidProd
 
-# Instalar dependências testes
+# Rodar o testes unitários
+
+    npm run test
+
+# Instalar dependências para rodar os testes de integração
 
     cd e2e; npm install
 
-# Rodar os testes
+# Rodar os testes de integração
 
     npm run e2e
