@@ -21,7 +21,7 @@ export const recalcularSaldoTotal = functions.https.onCall(async (_, ctx) => {
 
   try {
     if (uid && (await controle.create({}).catch(() => false))) {
-      const dataAtual = format(new Date(), 'YYYY-MM-DD');
+      const dataAtual = format(new Date(), 'yyyy-MM-dd');
 
       const caixas = await firestore
         .collection(`usuarios/${uid}/caixasFinanceiros`)
@@ -81,7 +81,7 @@ export const recalcularSaldoParcial = functions.https.onCall(async (_, ctx) => {
   if (await controle.create({}).catch(() => false)) {
     const query = await firestore
       .collection(`usuarios/${uid}/transacoes`)
-      .where('dataTransacao', '<=', format(new Date(), 'YYYY-MM-DD'))
+      .where('dataTransacao', '<=', format(new Date(), 'yyyy-MM-dd'))
       .where('caixaFuturo', '==', true)
       .get();
 
@@ -187,7 +187,7 @@ async function obterCaixaFinanceiro(usuarioId: string, caixaId: string) {
   if (doc.exists) {
     const caixa = doc.data() as CaixaFinanceiro;
     const dia = caixa.diaFechamentoFatura;
-    const data = format(dia ? new Date().setDate(dia) : new Date(), 'YYYY-MM-DD');
+    const data = format(dia ? new Date().setDate(dia) : new Date(), 'yyyy-MM-dd');
     return { doc, caixa, data };
   } else {
     return {};

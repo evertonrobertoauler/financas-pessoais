@@ -32,10 +32,10 @@ describe('Testando serviço responsavel pela formatação dos dados', () => {
   });
 
   it('Formatação dadas no formato brasileiro', () => {
-    expect(service.formatarData('1993-01-05', 'DD/MM/YYYY')).toBe('05/01/1993');
-    expect(service.formatarData('2001-09-31 23:59:45', 'DD/MM/YYYY HH:mm:ss')).toBe(
+    expect(service.formatarData('1993-01-05', 'dd/MM/yyyy')).toBe('05/01/1993');
+    expect(service.formatarData('2001-09-31 23:59:45', 'dd/MM/yyyy HH:mm:ss')).toBe(
       '01/10/2001 23:59:45'
     );
-    expect(service.formatarData(new Date(2020, 11, 25), 'DD/MM/YYYY')).toBe('25/12/2020');
+    expect(service.formatarData(new Date(2020, 11, 25), 'dd/MM/yyyy')).toBe('25/12/2020');
   });
 });

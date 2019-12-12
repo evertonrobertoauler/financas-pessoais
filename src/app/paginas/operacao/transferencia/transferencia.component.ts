@@ -18,7 +18,7 @@ export class OperacaoTransferenciaComponent implements FormularioComponent {
     caixaDestino: ['', Validators.required],
     descricao: ['', [Validators.required]],
     valor: ['', [Validators.required]],
-    dataTransacao: [this.formatarDados.formatarData(new Date(), 'YYYY-MM-DD'), Validators.required]
+    dataTransacao: [this.formatarDados.formatarData(new Date(), 'yyyy-MM-dd'), Validators.required]
   } as CamposTransferencia);
 
   public submit = false;

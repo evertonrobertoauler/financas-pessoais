@@ -26,7 +26,7 @@ export class OperacaoTransacaoComponent implements OnInit, FormularioComponent {
     tipo: ['Despesa' as TIPO_TRANSACAO, Validators.required],
     descricao: ['', Validators.required],
     valor: ['', [Validators.required]],
-    dataTransacao: [this.formatarDados.formatarData(new Date(), 'YYYY-MM-DD'), Validators.required]
+    dataTransacao: [this.formatarDados.formatarData(new Date(), 'yyyy-MM-dd'), Validators.required]
   } as CamposTransacao);
 
   submit: boolean;

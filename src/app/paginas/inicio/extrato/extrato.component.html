@@ -1,8 +1,12 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-buttons slot="start"> <app-voltar></app-voltar> </ion-buttons>
+    <ion-buttons slot="start">
+      <app-voltar></app-voltar>
+    </ion-buttons>
     <ion-title>Extrato</ion-title>
-    <ion-buttons slot="end"> <app-sair></app-sair> </ion-buttons>
+    <ion-buttons slot="end">
+      <app-sair></app-sair>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -18,22 +22,19 @@
       </ion-select>
     </ion-item>
     <ion-item *ngIf="!transacoes.length">
-      <ion-label text-wrap>
+      <ion-label class="ion-text-wrap">
         <h3>Nenhuma transação cadastrada até o momento!</h3>
         <p>Precione o botão (+) no canto inferior direito para cadastrar.</p>
       </ion-label>
     </ion-item>
-    <ion-item
-      *ngFor="let transacao of transacoes; trackBy: trackByFn"
-      (click)="editarTransacao(transacao)"
-    >
+    <ion-item *ngFor="let transacao of transacoes; trackBy: trackByFn" (click)="editarTransacao(transacao)">
       <ion-label>
         <div class="data-cadastro">{{ transacao.dataCadastro | formatarData: 'distancia' }}</div>
         <div [ngClass]="transacao.tipo === 'Despesa' ? 'despesa' : 'receita'">
           <h2>
             <b>{{ transacao.tipo }}</b>
           </h2>
-          <p><b>Data:</b> {{ transacao.dataTransacao | formatarData: 'DD [de] MMMM [de] YYYY' }}</p>
+          <p><b>Data:</b> {{ transacao.dataTransacao | formatarData: 'dd \'de\' MMMM \'de\' yyyy' }}</p>
           <p><b>Valor:</b> {{ transacao.valor || 0 | formatarValor: 'R$ ' }}</p>
         </div>
         <p *ngIf="(transacao.caixaFinanceiro$ | async) as caixa">
@@ -44,10 +45,7 @@
     </ion-item>
   </ion-list>
   <ion-infinite-scroll threshold="100px" (ionInfinite)="carregarTransacoesAnteriores($event)">
-    <ion-infinite-scroll-content
-      loadingSpinner="circles"
-      loadingText="Buscando transações anteriores..."
-    >
+    <ion-infinite-scroll-content loadingSpinner="circles" loadingText="Buscando transações anteriores...">
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">

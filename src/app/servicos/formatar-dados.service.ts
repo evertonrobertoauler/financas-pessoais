@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import * as VMasker from 'vanilla-masker';
-import { format, distanceInWordsToNow } from 'date-fns';
-import * as pt from 'date-fns/locale/pt';
+import { format, formatDistanceToNow, parseISO } from 'date-fns';
+import ptBR from 'date-fns/locale/pt-BR';
+
+const p = d => (typeof d === 'string' ? parseISO(d) : d);
 
 @Injectable({ providedIn: 'root' })
 export class FormatarDadosService {
@@ -42,11 +44,11 @@ export class FormatarDadosService {
   }
 
   formatarData(data: Date | string, formato: string) {
-    return this.capitalizarPalavras((data && format(data, formato, { locale: pt })) || '');
+    return this.capitalizarPalavras((data && format(p(data), formato, { locale: ptBR })) || '');
   }
 
   formatarDistanciaData(data: Date | string) {
-    const retorno = (data && distanceInWordsToNow(data, { locale: pt, addSuffix: true })) || '';
+    const retorno = (data && formatDistanceToNow(p(data), { locale: ptBR, addSuffix: true })) || '';
     return retorno.replace(/aproximadamente/, 'aprox.');
   }
 

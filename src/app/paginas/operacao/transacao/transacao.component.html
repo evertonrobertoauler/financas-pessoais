@@ -1,6 +1,8 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-buttons slot="start"> <app-voltar> </app-voltar> </ion-buttons>
+    <ion-buttons slot="start">
+      <app-voltar> </app-voltar>
+    </ion-buttons>
     <ion-title>Transação</ion-title>
     <ion-buttons slot="end" *ngIf="id">
       <ion-button color="light" (click)="excluir()">
@@ -10,17 +12,13 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content class="ion-padding">
   <form [formGroup]="formulario" appFormulario (submit)="salvar()">
     <ion-list>
       <ion-item>
         <ion-label position="stacked">Caixa Financeiro</ion-label>
-        <ion-select
-          placeholder="Selecione um caixa"
-          interface="popover"
-          formControlName="caixaFinanceiro"
-          appCampoFormulario
-        >
+        <ion-select placeholder="Selecione um caixa" interface="popover" formControlName="caixaFinanceiro"
+          appCampoFormulario>
           <ion-select-option *ngFor="let caixa of (caixas$ | async)" [value]="caixa.id">
             {{ caixa.nome }} ({{ caixa.tipo }})
           </ion-select-option>
@@ -28,12 +26,7 @@
       </ion-item>
       <ion-item>
         <ion-label position="stacked">Tipo</ion-label>
-        <ion-select
-          placeholder="Selecione um tipo"
-          interface="popover"
-          formControlName="tipo"
-          appCampoFormulario
-        >
+        <ion-select placeholder="Selecione um tipo" interface="popover" formControlName="tipo" appCampoFormulario>
           <ion-select-option *ngFor="let tipo of tipos" [value]="tipo">
             {{ tipo }}
           </ion-select-option>
@@ -41,12 +34,8 @@
       </ion-item>
       <ion-item>
         <ion-label position="stacked">Data Transação</ion-label>
-        <ion-datetime
-          display-format="DD/MM/YYYY"
-          picker-format="DD MM YYYY"
-          formControlName="dataTransacao"
-          appCampoFormulario
-        >
+        <ion-datetime display-format="DD/MM/YYYY" picker-format="DD MM YYYY" formControlName="dataTransacao"
+          appCampoFormulario>
         </ion-datetime>
       </ion-item>
       <ion-item>
@@ -56,17 +45,13 @@
       </ion-item>
       <ion-item>
         <ion-label position="stacked">Valor</ion-label>
-        <ion-input
-          type="tel"
-          formControlName="valor"
-          appCampoFormulario
-          appMascara="valor"
-          clearInput
-        >
+        <ion-input type="tel" formControlName="valor" appCampoFormulario appMascara="valor" clearInput>
         </ion-input>
       </ion-item>
       <ion-item>
-        <ion-label> <ion-button expand="full" type="submit">Salvar</ion-button> </ion-label>
+        <ion-label>
+          <ion-button expand="full" type="submit">Salvar</ion-button>
+        </ion-label>
       </ion-item>
     </ion-list>
   </form>

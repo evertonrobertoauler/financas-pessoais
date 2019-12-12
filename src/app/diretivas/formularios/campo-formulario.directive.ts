@@ -33,13 +33,15 @@ export class CampoFormularioDirective implements AfterViewInit, OnDestroy {
 
       if (this.campo.nodeName.toLowerCase() === 'ion-input') {
         await fromEvent(this.campo, 'ionInputDidLoad')
+          .pipe(debounceTime(300))
           .pipe(first())
           .toPromise();
 
         this.campo = this.campo.querySelector('input');
 
         this.fecharTeclado = fromEvent(this.campo, 'keydown')
-          .pipe(filter((e: any) => [9, 13].indexOf(e.keyCode) !== -1))
+          .pipe(filter((e: any) => [9, 13].includes(e.keyCode)))
+          .pipe(debounceTime(100))
           .subscribe(() => this.formulario.irParaProximoCampo(this.campo));
       }
 
@@ -127,9 +129,7 @@ export class CampoFormularioDirective implements AfterViewInit, OnDestroy {
       case 'max':
         return `Informe um número menor ou igual a ${value.max}!`;
       case 'pattern':
-        return `Informe um valor válido para a seguinte expressão regular ${
-          value.requiredPattern
-        }!`;
+        return `Informe um valor válido para a seguinte expressão regular ${value.requiredPattern}!`;
       case 'email':
         return 'E-mail inválido!';
       case 'cpf':
